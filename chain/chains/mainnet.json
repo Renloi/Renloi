@@ -1,0 +1,41 @@
+{
+    "name": "mainnet",
+    "genesis": {
+        "nonce": "0x0000000000000000",
+        "timestamp": "0x0",
+        "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000edea94ce0930a76a4ece859daf86bd630b2f5448a4d758946779d2643e4c6878b4463b1603973c813845cf3480c0",
+        "gasLimit": "0x500000",
+        "difficulty": "0x1",
+        "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+        "coinbase": "0x0000000000000000000000000000000000000000",
+        "alloc": {
+            "0x7E2CE1fcf0583432902d53151ee23Eb624Cb780B": {
+                "balance": "268000000000000000000000000"
+            }
+        },
+        "number": "0x0",
+        "gasUsed": "0x70000",
+        "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000"
+    },
+    "params": {
+        "forks": {
+            "homestead": 0,
+            "byzantium": 0,
+            "constantinople": 0,
+            "petersburg": 0,
+            "istanbul": 0,
+            "EIP150": 0,
+            "EIP158": 0,
+            "EIP155": 0
+        },
+        "chainID": 268,
+        "engine": {
+            "ibft": {}
+        },
+        "blockGasTarget": 0
+    },
+    "bootnodes": [
+        "/ip4/34.145.55.60/tcp/1478/p2p/16Uiu2HAmMsAS2TSGDUe3mF81UhgZ3kq3wP1pR6EbAjYvChJBKrDU",
+        "/ip4/35.227.188.243/tcp/1478/p2p/16Uiu2HAm5B5et7DpmSvkxLCo2QGammFDCsnFcHTuvx4PXGfHtmC2"
+    ]
+}

@@ -1,0 +1,18 @@
+peers.json
+genesis.json
+secretsManagerConfig.json
+*-packr.go
+config*.json
+
+bin/
+
+test-chain*
+.idea
+
+# Exclude the build .exe file from version control
+main.exe
+main
+
+# MacOS Leftovers
+.DS_Store
+.vscode
