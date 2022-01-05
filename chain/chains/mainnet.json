@@ -3,14 +3,14 @@
     "genesis": {
         "nonce": "0x0000000000000000",
         "timestamp": "0x0",
-        "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000edea9460e9a846f285eb926872894f1359b0212fa0333f94437d54c2351f531e5570496484e87d116e87869b80c0",
+        "extraData": "0x0000000000000000000000000000000000000000000000000000000000000000edea94c632c2851f79cfba31c30ff1a300dacb053fc99a94f937e54ee1c5cb8ecd365ad2ec45eb925ff974f380c0",
         "gasLimit": "0x500000",
         "difficulty": "0x1",
         "mixHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
         "coinbase": "0x0000000000000000000000000000000000000000",
         "alloc": {
             "0x7E2CE1fcf0583432902d53151ee23Eb624Cb780B": {
-                "balance": "0xddaf351c7e88c48c000000"
+                "balance": "268000000000000000000000000"
             }
         },
         "number": "0x0",
@@ -35,7 +35,7 @@
         "blockGasTarget": 0
     },
     "bootnodes": [
-        "/ip4/34.145.55.60/tcp/1478/p2p/16Uiu2HAkzRpyAzctaR6PuCyXSwW1JKURRjzE2xGUZcwvGkiiciN6",
-        "/ip4/35.227.188.243/tcp/1478/p2p/16Uiu2HAm4MsY9KuNdnngtEEaN9Pkpr45hTtV5FKAnvyE3RA3bEwE"
+        "/ip4/34.145.55.60/tcp/1478/p2p/16Uiu2HAkz8xQ9u8Ya7A8MLAgT8NWTWmeDBBWQ2J5bHSe4dnFiGmz",
+        "/ip4/35.227.188.243/tcp/1478/p2p/16Uiu2HAmDjFyfc7xp5Atz74suUmD6xPgcsN45hmqYkyYN7ZQzN2D"
     ]
 }
