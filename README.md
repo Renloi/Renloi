@@ -12,5 +12,9 @@ Build for your operating system:
 * Download the genesis file from https://github.com/Renloi/Renloi/blob/main/chain/chains/mainnet.json
 
 `$ Renloi server --chain genesis.json --data-dir ./data`
+# Renloi's community
+* Discord https://discord.gg/WyYHDcDFQB
+* Telegram https://t.me/renloi_org
+
 
 
