@@ -16,7 +16,7 @@ Build for your operating system:
 `$ Renloi server --chain mainnet.json --data-dir ./data`
 ## Renloi's community
 * Website https://renloi.org
-* Discord https://discord.gg/WyYHDcDFQB
+* Discord https://discord.gg/renloi
 * Telegram https://t.me/renloi_org
 
 
