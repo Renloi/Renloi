@@ -5,7 +5,7 @@ EVM-compatible Proof of Authority Blockchain network.
 Make sure you have golang installed.
 Build for your operating system:
 
-`go build`
+`$ go build`
 
 ## Run a node
 * Download the latest release from https://github.com/Renloi/Renloi/releases
