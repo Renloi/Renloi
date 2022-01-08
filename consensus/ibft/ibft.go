@@ -384,7 +384,7 @@ func (i *Ibft) runSyncState() {
 	}
 }
 
-var defaultBlockPeriod = 10 * time.Second
+var defaultBlockPeriod = 4 * time.Second
 
 // buildBlock builds the block, based on the passed in snapshot and parent header
 func (i *Ibft) buildBlock(snap *Snapshot, parent *types.Header) (*types.Block, error) {
