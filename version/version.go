@@ -2,7 +2,7 @@ package version
 
 var (
 	// Version is the main version at the moment.
-	Version = "0.1.0"
+	Version = "0.1.1"
 )
 
 // Versioning should follow the SemVer guidelines
