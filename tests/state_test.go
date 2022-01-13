@@ -1,148 +1,133 @@
+// Copyright 2015 The renloi Authors
+// This file is part of the renloi library.
+//
+// The renloi library is free software: you can redistribute it and/or modify
+// it under the terms of the GNU Lesser General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// The renloi library is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+// GNU Lesser General Public License for more details.
+//
+// You should have received a copy of the GNU Lesser General Public License
+// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+
 package tests
 
 import (
+	"bufio"
 	"bytes"
-	"encoding/json"
-	"io/ioutil"
-	"math/big"
-	"strings"
+	"fmt"
+	"reflect"
 	"testing"
 
-	"github.com/hashicorp/go-hclog"
-
-	"github.com/Renloi/Renloi/chain"
-	"github.com/Renloi/Renloi/helper/hex"
-	"github.com/Renloi/Renloi/state"
-	"github.com/Renloi/Renloi/state/runtime/evm"
-	"github.com/Renloi/Renloi/state/runtime/precompiled"
-	"github.com/Renloi/Renloi/types"
+	"github.com/renloi/renloi/core/vm"
+	"github.com/renloi/renloi/eth/tracers/logger"
 )
-
-var (
-	stateTests       = "GeneralStateTests"
-	legacyStateTests = "LegacyTests/Constantinople/GeneralStateTests"
-)
-
-type stateCase struct {
-	Info        *info                                   `json:"_info"`
-	Env         *env                                    `json:"env"`
-	Pre         map[types.Address]*chain.GenesisAccount `json:"pre"`
-	Post        map[string]postState                    `json:"post"`
-	Transaction *stTransaction                          `json:"transaction"`
-}
-
-var ripemd = types.StringToAddress("0000000000000000000000000000000000000003")
-
-func RunSpecificTest(file string, t *testing.T, c stateCase, name, fork string, index int, p postEntry) {
-	config, ok := Forks[fork]
-	if !ok {
-		t.Fatalf("config %s not found", fork)
-	}
-
-	env := c.Env.ToEnv(t)
-
-	msg, err := c.Transaction.At(p.Indexes)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	s, _, pastRoot := buildState(t, c.Pre)
-	forks := config.At(uint64(env.Number))
-
-	xxx := state.NewExecutor(&chain.Params{Forks: config, ChainID: 1}, s, hclog.NewNullLogger())
-	xxx.SetRuntime(precompiled.NewPrecompiled())
-	xxx.SetRuntime(evm.NewEVM())
-
-	xxx.PostHook = func(t *state.Transition) {
-		if name == "failed_tx_xcf416c53" {
-			// create the account
-			t.Txn().TouchAccount(ripemd)
-			// now remove it
-			t.Txn().Suicide(ripemd)
-		}
-	}
-	xxx.GetHash = func(*types.Header) func(i uint64) types.Hash {
-		return vmTestBlockHash
-	}
-
-	executor, _ := xxx.BeginTxn(pastRoot, c.Env.ToHeader(t), env.Coinbase)
-	executor.Apply(msg) //nolint:errcheck
-
-	txn := executor.Txn()
-
-	// mining rewards
-	txn.AddSealingReward(env.Coinbase, big.NewInt(0))
-
-	_, root := txn.Commit(forks.EIP158)
-	if !bytes.Equal(root, p.Root.Bytes()) {
-		t.Fatalf("root mismatch (%s %s %s %d): expected %s but found %s", file, name, fork, index, p.Root.String(), hex.EncodeToHex(root))
-	}
-
-	if logs := rlpHashLogs(txn.Logs()); logs != p.Logs {
-		t.Fatalf("logs mismatch (%s, %s %d): expected %s but found %s", name, fork, index, p.Logs.String(), logs.String())
-	}
-}
 
 func TestState(t *testing.T) {
-	long := []string{
-		"static_Call50000",
-		"static_Return50000",
-		"static_Call1MB",
-		"stQuadraticComplexityTest",
-		"stTimeConsuming",
-	}
+	t.Parallel()
 
-	skip := []string{
-		"RevertPrecompiledTouch",
-	}
+	st := new(testMatcher)
+	// Long tests:
+	st.slow(`^stAttackTest/ContractCreationSpam`)
+	st.slow(`^stBadOpcode/badOpcodes`)
+	st.slow(`^stPreCompiledContracts/modexp`)
+	st.slow(`^stQuadraticComplexityTest/`)
+	st.slow(`^stStaticCall/static_Call50000`)
+	st.slow(`^stStaticCall/static_Return50000`)
+	st.slow(`^stSystemOperationsTest/CallRecursiveBomb`)
+	st.slow(`^stTransactionTest/Opcodes_TransactionInit`)
 
-	// There are two folders in spec tests, one for the current tests for the Istanbul fork
-	// and one for the legacy tests for the other forks
-	folders, err := listFolders(stateTests, legacyStateTests)
-	if err != nil {
-		t.Fatal(err)
-	}
+	// Very time consuming
+	st.skipLoad(`^stTimeConsuming/`)
+	st.skipLoad(`.*vmPerformance/loop.*`)
 
-	for _, folder := range folders {
-		t.Run(folder, func(t *testing.T) {
-			files, err := listFiles(folder)
-			if err != nil {
-				t.Fatal(err)
-			}
+	// Uses 1GB RAM per tested fork
+	st.skipLoad(`^stStaticCall/static_Call1MB`)
 
-			for _, file := range files {
-				if !strings.HasSuffix(file, ".json") {
-					continue
-				}
+	// Broken tests:
+	// Expected failures:
+	//st.fails(`^stRevertTest/RevertPrecompiledTouch(_storage)?\.json/Byzantium/0`, "bug in test")
+	//st.fails(`^stRevertTest/RevertPrecompiledTouch(_storage)?\.json/Byzantium/3`, "bug in test")
+	//st.fails(`^stRevertTest/RevertPrecompiledTouch(_storage)?\.json/Constantinople/0`, "bug in test")
+	//st.fails(`^stRevertTest/RevertPrecompiledTouch(_storage)?\.json/Constantinople/3`, "bug in test")
+	//st.fails(`^stRevertTest/RevertPrecompiledTouch(_storage)?\.json/ConstantinopleFix/0`, "bug in test")
+	//st.fails(`^stRevertTest/RevertPrecompiledTouch(_storage)?\.json/ConstantinopleFix/3`, "bug in test")
 
-				if contains(long, file) && testing.Short() {
-					t.Skipf("Long tests are skipped in short mode")
-					continue
-				}
+	// For Istanbul, older tests were moved into LegacyTests
+	for _, dir := range []string{
+		stateTestDir,
+		legacyStateTestDir,
+	} {
+		st.walk(t, dir, func(t *testing.T, name string, test *StateTest) {
+			for _, subtest := range test.Subtests() {
+				subtest := subtest
+				key := fmt.Sprintf("%s/%d", subtest.Fork, subtest.Index)
 
-				if contains(skip, file) {
-					t.Skip()
-					continue
-				}
-
-				data, err := ioutil.ReadFile(file)
-				if err != nil {
-					t.Fatal(err)
-				}
-
-				var c map[string]stateCase
-				if err := json.Unmarshal(data, &c); err != nil {
-					t.Fatal(err)
-				}
-
-				for name, i := range c {
-					for fork, f := range i.Post {
-						for indx, e := range f {
-							RunSpecificTest(file, t, i, name, fork, indx, e)
+				t.Run(key+"/trie", func(t *testing.T) {
+					withTrace(t, test.gasLimit(subtest), func(vmconfig vm.Config) error {
+						_, _, err := test.Run(subtest, vmconfig, false)
+						if err != nil && len(test.json.Post[subtest.Fork][subtest.Index].ExpectException) > 0 {
+							// Ignore expected errors (TODO MariusVanDerWijden check error string)
+							return nil
 						}
-					}
-				}
+						return st.checkFailure(t, err)
+					})
+				})
+				t.Run(key+"/snap", func(t *testing.T) {
+					withTrace(t, test.gasLimit(subtest), func(vmconfig vm.Config) error {
+						snaps, statedb, err := test.Run(subtest, vmconfig, true)
+						if snaps != nil && statedb != nil {
+							if _, err := snaps.Journal(statedb.IntermediateRoot(false)); err != nil {
+								return err
+							}
+						}
+						if err != nil && len(test.json.Post[subtest.Fork][subtest.Index].ExpectException) > 0 {
+							// Ignore expected errors (TODO MariusVanDerWijden check error string)
+							return nil
+						}
+						return st.checkFailure(t, err)
+					})
+				})
 			}
 		})
 	}
+}
+
+// Transactions with gasLimit above this value will not get a VM trace on failure.
+const traceErrorLimit = 400000
+
+func withTrace(t *testing.T, gasLimit uint64, test func(vm.Config) error) {
+	// Use config from command line arguments.
+	config := vm.Config{}
+	err := test(config)
+	if err == nil {
+		return
+	}
+
+	// Test failed, re-run with tracing enabled.
+	t.Error(err)
+	if gasLimit > traceErrorLimit {
+		t.Log("gas limit too high for EVM trace")
+		return
+	}
+	buf := new(bytes.Buffer)
+	w := bufio.NewWriter(buf)
+	tracer := logger.NewJSONLogger(&logger.Config{}, w)
+	config.Debug, config.Tracer = true, tracer
+	err2 := test(config)
+	if !reflect.DeepEqual(err, err2) {
+		t.Errorf("different error for second run: %v", err2)
+	}
+	w.Flush()
+	if buf.Len() == 0 {
+		t.Log("no EVM operation logs generated")
+	} else {
+		t.Log("EVM operation log:\n" + buf.String())
+	}
+	// t.Logf("EVM output: 0x%x", tracer.Output())
+	// t.Logf("EVM error: %v", tracer.Error())
 }
