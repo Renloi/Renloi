@@ -7,13 +7,8 @@ A digital decentralized version of cash will allow extremely fast transactions a
 Make sure you have golang installed.
 Build for your operating system:
 
-`$ go build`
+`$ make renloi`
 
-## Run a node
-* Download the latest release from https://github.com/Renloi/Renloi/releases
-* Download the genesis file from https://github.com/Renloi/Renloi/blob/main/chain/chains/mainnet.json
-
-`$ Renloi server --chain mainnet.json --data-dir ./data`
 ## Renloi's community
 * Website https://renloi.org
 * Discord https://discord.gg/renloi
