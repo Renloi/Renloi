@@ -1,18 +1,18 @@
-// Copyright 2015 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -60,7 +60,7 @@ func (s *Server) WebsocketHandler(allowedOrigins []string) http.Handler {
 			log.Debug("WebSocket upgrade failed", "err", err)
 			return
 		}
-		codec := newWebsocketCodec(conn)
+		codec := newWebsocketCodec(conn, r.Host, r.Header)
 		s.ServeCodec(codec, 0)
 	})
 }
@@ -197,7 +197,7 @@ func DialWebsocketWithDialer(ctx context.Context, endpoint, origin string, diale
 			}
 			return nil, hErr
 		}
-		return newWebsocketCodec(conn), nil
+		return newWebsocketCodec(conn, endpoint, header), nil
 	})
 }
 
@@ -235,12 +235,13 @@ func wsClientHeaders(endpoint, origin string) (string, http.Header, error) {
 type websocketCodec struct {
 	*jsonCodec
 	conn *websocket.Conn
+	info PeerInfo
 
 	wg        sync.WaitGroup
 	pingReset chan struct{}
 }
 
-func newWebsocketCodec(conn *websocket.Conn) ServerCodec {
+func newWebsocketCodec(conn *websocket.Conn, host string, req http.Header) ServerCodec {
 	conn.SetReadLimit(wsMessageSizeLimit)
 	conn.SetPongHandler(func(appData string) error {
 		conn.SetReadDeadline(time.Time{})
@@ -250,7 +251,16 @@ func newWebsocketCodec(conn *websocket.Conn) ServerCodec {
 		jsonCodec: NewFuncCodec(conn, conn.WriteJSON, conn.ReadJSON).(*jsonCodec),
 		conn:      conn,
 		pingReset: make(chan struct{}, 1),
+		info: PeerInfo{
+			Transport:  "ws",
+			RemoteAddr: conn.RemoteAddr().String(),
+		},
 	}
+	// Fill in connection details.
+	wc.info.HTTP.Host = host
+	wc.info.HTTP.Origin = req.Get("Origin")
+	wc.info.HTTP.UserAgent = req.Get("User-Agent")
+	// Start pinger.
 	wc.wg.Add(1)
 	go wc.pingLoop()
 	return wc
@@ -259,6 +269,10 @@ func newWebsocketCodec(conn *websocket.Conn) ServerCodec {
 func (wc *websocketCodec) close() {
 	wc.jsonCodec.close()
 	wc.wg.Wait()
+}
+
+func (wc *websocketCodec) peerInfo() PeerInfo {
+	return wc.info
 }
 
 func (wc *websocketCodec) writeJSON(ctx context.Context, v interface{}) error {

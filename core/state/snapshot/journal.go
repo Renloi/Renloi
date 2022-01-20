@@ -1,18 +1,18 @@
-// Copyright 2019 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package snapshot
 
@@ -64,6 +64,29 @@ type journalStorage struct {
 	Hash common.Hash
 	Keys []common.Hash
 	Vals [][]byte
+}
+
+func ParseGeneratorStatus(generatorBlob []byte) string {
+	if len(generatorBlob) == 0 {
+		return ""
+	}
+	var generator journalGenerator
+	if err := rlp.DecodeBytes(generatorBlob, &generator); err != nil {
+		log.Warn("failed to decode snapshot generator", "err", err)
+		return ""
+	}
+	// Figure out whether we're after or within an account
+	var m string
+	switch marker := generator.Marker; len(marker) {
+	case common.HashLength:
+		m = fmt.Sprintf("at %#x", marker)
+	case 2 * common.HashLength:
+		m = fmt.Sprintf("in %#x at %#x", marker[:common.HashLength], marker[common.HashLength:])
+	default:
+		m = fmt.Sprintf("%#x", marker)
+	}
+	return fmt.Sprintf(`Done: %v, Accounts: %d, Slots: %d, Storage: %d, Marker: %s`,
+		generator.Done, generator.Accounts, generator.Slots, generator.Storage, m)
 }
 
 // loadAndParseJournal tries to parse the snapshot journal in latest format.

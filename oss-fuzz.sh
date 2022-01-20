@@ -1,5 +1,5 @@
 #/bin/bash -eu
-# Copyright 2020 Google Inc.
+# Copyright 2022 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -61,7 +61,7 @@ DOG
 
 function compile_fuzzer {
   # Inputs:
-  # $1: The package to fuzz, within renloi
+  # $1: The package to fuzz, within Renloi
   # $2: The name of the fuzzing function
   # $3: The name to give to the final fuzzing-binary
 

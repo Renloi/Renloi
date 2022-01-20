@@ -1,18 +1,18 @@
-// Copyright 2017 The renloi Authors
-// This file is part of renloi.
+// Copyright 2021 The Renloi Authors
+// This file is part of Renloi.
 //
-// renloi is free software: you can redistribute it and/or modify
+// Renloi is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// renloi is distributed in the hope that it will be useful,
+// Renloi is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with renloi. If not, see <http://www.gnu.org/licenses/>.
+// along with Renloi. If not, see <http://www.gnu.org/licenses/>.
 
 package main
 
@@ -118,7 +118,7 @@ var dashboardContent = `
 											<pre>renloi --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=1024 --syncmode=full{{if .Ethstats}} --ethstats='{{.Ethstats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download Renloi from <a href="https://renloi.renloi.org/downloads/" target="about:blank">https://renloi.renloi.org/downloads/</a>.</p>
+										<p>You can download Renloi from <a href="https://renloi.ethereum.org/downloads/" target="about:blank">https://renloi.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -137,7 +137,7 @@ var dashboardContent = `
 											<pre>renloi --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=512{{if .Ethstats}} --ethstats='{{.Ethstats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download Renloi from <a href="https://renloi.renloi.org/downloads/" target="about:blank">https://renloi.renloi.org/downloads/</a>.</p>
+										<p>You can download Renloi from <a href="https://renloi.ethereum.org/downloads/" target="about:blank">https://renloi.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -159,7 +159,7 @@ var dashboardContent = `
 											<pre>renloi --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --syncmode=light{{if .Ethstats}} --ethstats='{{.Ethstats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download Renloi from <a href="https://renloi.renloi.org/downloads/" target="about:blank">https://renloi.renloi.org/downloads/</a>.</p>
+										<p>You can download Renloi from <a href="https://renloi.ethereum.org/downloads/" target="about:blank">https://renloi.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -178,7 +178,7 @@ var dashboardContent = `
 											<pre>renloi --networkid={{.NetworkID}} --datadir=$HOME/.{{.Network}} --cache=16 --ethash.cachesinmem=1 --syncmode=light{{if .Ethstats}} --ethstats='{{.Ethstats}}'{{end}} --bootnodes={{.BootnodesFlat}}</pre>
 										</p>
 										<br/>
-										<p>You can download Renloi from <a href="https://renloi.renloi.org/downloads/" target="about:blank">https://renloi.renloi.org/downloads/</a>.</p>
+										<p>You can download Renloi from <a href="https://renloi.ethereum.org/downloads/" target="about:blank">https://renloi.ethereum.org/downloads/</a>.</p>
 									</div>
 								</div>
 							</div>
@@ -199,8 +199,8 @@ var dashboardContent = `
 										<div class="clearfix"></div>
 									</div>
 									<div class="x_content">
-										<p>Starting with the 1.5 release of renloi, we've transitioned away from shipping only full blown Ethereum clients and started focusing on releasing the code as reusable packages initially for Go projects, then later for Java based Android projects too. Mobile support is still evolving, hence is bound to change often and hard, but the Ethereum network can nonetheless be accessed from Android too.</p>
-										<p>Under the hood the Android library is backed by a renloi light node, meaning that given a not-too-old Android device, you should be able to join the network without significant issues. Certain functionality is not yet available and rough edges are bound to appear here and there, please report issues if you find any.</p>
+										<p>Starting with the 1.5 release of Renloi, we've transitioned away from shipping only full blown Ethereum clients and started focusing on releasing the code as reusable packages initially for Go projects, then later for Java based Android projects too. Mobile support is still evolving, hence is bound to change often and hard, but the Ethereum network can nonetheless be accessed from Android too.</p>
+										<p>Under the hood the Android library is backed by a Renloi light node, meaning that given a not-too-old Android device, you should be able to join the network without significant issues. Certain functionality is not yet available and rough edges are bound to appear here and there, please report issues if you find any.</p>
 										<br/>
 										<p>The stable Android archives are distributed via Maven Central, and the develop snapshots via the Sonatype repositories. Before proceeding, please ensure you have a recent version configured in your Android project. You can find details in <a href="https://github.com/renloi/renloi/wiki/Mobile:-Introduction#android-archive" target="about:blank">Mobile: Introduction &ndash; Android archive</a>.
 										<p>Before connecting to the Ethereum network, download the <a href="/{{.RenloiGenesis}}"><code>{{.RenloiGenesis}}</code></a> genesis json file and either store it in your Android project as a resource file you can access, or save it as a string in a variable. You're going to need to initialize your client.</p>
@@ -230,8 +230,8 @@ node.start();
 										<div class="clearfix"></div>
 									</div>
 									<div class="x_content">
-										<p>Starting with the 1.5 release of renloi, we've transitioned away from shipping only full blown Ethereum clients and started focusing on releasing the code as reusable packages initially for Go projects, then later for ObjC/Swift based iOS projects too. Mobile support is still evolving, hence is bound to change often and hard, but the Ethereum network can nonetheless be accessed from iOS too.</p>
-										<p>Under the hood the iOS library is backed by a renloi light node, meaning that given a not-too-old Apple device, you should be able to join the network without significant issues. Certain functionality is not yet available and rough edges are bound to appear here and there, please report issues if you find any.</p>
+										<p>Starting with the 1.5 release of Renloi, we've transitioned away from shipping only full blown Ethereum clients and started focusing on releasing the code as reusable packages initially for Go projects, then later for ObjC/Swift based iOS projects too. Mobile support is still evolving, hence is bound to change often and hard, but the Ethereum network can nonetheless be accessed from iOS too.</p>
+										<p>Under the hood the iOS library is backed by a Renloi light node, meaning that given a not-too-old Apple device, you should be able to join the network without significant issues. Certain functionality is not yet available and rough edges are bound to appear here and there, please report issues if you find any.</p>
 										<br/>
 										<p>Both stable and develop builds of the iOS framework are available via CocoaPods. Before proceeding, please ensure you have a recent version configured in your iOS project. You can find details in <a href="https://github.com/renloi/renloi/wiki/Mobile:-Introduction#ios-framework" target="about:blank">Mobile: Introduction &ndash; iOS framework</a>.
 										<p>Before connecting to the Ethereum network, download the <a href="/{{.RenloiGenesis}}"><code>{{.RenloiGenesis}}</code></a> genesis json file and either store it in your iOS project as a resource file you can access, or save it as a string in a variable. You're going to need to initialize your client.</p>
@@ -365,9 +365,9 @@ try! node?.start();
 										<p>Puppeth is a tool to aid you in creating a new Ethereum network down to the genesis block, bootnodes, signers, ethstats server, crypto faucet,  block explorer, dashboard and more; without the hassle that it would normally entail to manually configure all these services one by one.</p>
 										<p>Puppeth uses ssh to dial in to remote servers, and builds its network components out of docker containers using docker-compose. The user is guided through the process via a command line wizard that does the heavy lifting and topology configuration automatically behind the scenes.</p>
 										<br/>
-										<p>Puppeth is distributed as part of the <a href="https://renloi.renloi.org/downloads/" target="about:blank">Renloi &amp; Tools</a> bundles, but can also be installed separately via:<pre>go get github.com/renloi/renloi/cmd/puppeth</pre></p>
+										<p>Puppeth is distributed as part of the <a href="https://renloi.ethereum.org/downloads/" target="about:blank">Renloi &amp; Tools</a> bundles, but can also be installed separately via:<pre>go get github.com/renloi/renloi/cmd/puppeth</pre></p>
 										<br/>
-										<p><em>Copyright 2017. The renloi Authors.</em></p>
+										<p><em>Copyright 2021. The Renloi Authors.</em></p>
 									</div>
 									<div style="display: inline-block; vertical-align: bottom; width: 217px;">
 										<img src="puppeth.png" style="height: 256px; margin: 16px 16px 16px 16px"></img>
@@ -579,7 +579,7 @@ func deployDashboard(client *sshClient, network string, conf *config, config *da
 	})
 	files[filepath.Join(workdir, "index.html")] = indexfile.Bytes()
 
-	// Marshal the genesis spec files for renloi and all the other clients
+	// Marshal the genesis spec files for Renloi and all the other clients
 	genesis, _ := conf.Genesis.MarshalJSON()
 	files[filepath.Join(workdir, network+".json")] = genesis
 

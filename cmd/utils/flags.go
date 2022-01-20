@@ -1,20 +1,20 @@
-// Copyright 2015 The renloi Authors
-// This file is part of renloi.
+// Copyright 2021 The Renloi Authors
+// This file is part of Renloi.
 //
-// renloi is free software: you can redistribute it and/or modify
+// Renloi is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// renloi is distributed in the hope that it will be useful,
+// Renloi is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU General Public License for more details.
 //
 // You should have received a copy of the GNU General Public License
-// along with renloi. If not, see <http://www.gnu.org/licenses/>.
+// along with Renloi. If not, see <http://www.gnu.org/licenses/>.
 
-// Package utils contains internal helper functions for renloi commands.
+// Package utils contains internal helper functions for Renloi commands.
 package utils
 
 import (
@@ -1675,7 +1675,7 @@ func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 		if ctx.GlobalIsSet(DataDirFlag.Name) {
 			// Check if we have an already initialized chain and fall back to
 			// that if so. Otherwise we need to generate a new genesis spec.
-			chaindb := MakeChainDatabase(ctx, stack, false) // TODO (MariusVanDerWijden) make this read only
+			chaindb := MakeChainDatabase(ctx, stack, true)
 			if rawdb.ReadCanonicalHash(chaindb, 0) != (common.Hash{}) {
 				cfg.Genesis = nil // fallback to db content
 			}

@@ -1,18 +1,18 @@
-// Copyright 2016 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -692,7 +692,7 @@ func httpTestClient(srv *Server, transport string, fl *flakeyListener) (*Client,
 
 func ipcTestClient(srv *Server, fl *flakeyListener) (*Client, net.Listener) {
 	// Listen on a random endpoint.
-	endpoint := fmt.Sprintf("renloi-test-ipc-%d-%d", os.Getpid(), rand.Int63())
+	endpoint := fmt.Sprintf("Renloi-test-ipc-%d-%d", os.Getpid(), rand.Int63())
 	if runtime.GOOS == "windows" {
 		endpoint = `\\.\pipe\` + endpoint
 	} else {

@@ -1,18 +1,18 @@
-// Copyright 2015 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -45,7 +45,7 @@ func TestServerRegisterName(t *testing.T) {
 		t.Fatalf("Expected service calc to be registered")
 	}
 
-	wantCallbacks := 9
+	wantCallbacks := 10
 	if len(svc.callbacks) != wantCallbacks {
 		t.Errorf("Expected %d callbacks for service 'service', got %d", wantCallbacks, len(svc.callbacks))
 	}

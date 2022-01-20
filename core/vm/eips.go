@@ -1,18 +1,18 @@
-// Copyright 2019 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package vm
 
@@ -110,7 +110,7 @@ func enable2200(jt *JumpTable) {
 }
 
 // enable2929 enables "EIP-2929: Gas cost increases for state access opcodes"
-// https://eips.renloi.org/EIPS/eip-2929
+// https://eips.ethereum.org/EIPS/eip-2929
 func enable2929(jt *JumpTable) {
 	jt[SSTORE].dynamicGas = gasSStoreEIP2929
 

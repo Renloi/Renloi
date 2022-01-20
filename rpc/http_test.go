@@ -1,18 +1,18 @@
-// Copyright 2017 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package rpc
 
@@ -160,5 +160,41 @@ func TestHTTPErrorResponse(t *testing.T) {
 
 	if errMsg := httpErr.Error(); errMsg != "418 I'm a teapot: error has occurred!\n" {
 		t.Error("unexpected error message", errMsg)
+	}
+}
+
+func TestHTTPPeerInfo(t *testing.T) {
+	s := newTestServer()
+	defer s.Stop()
+	ts := httptest.NewServer(s)
+	defer ts.Close()
+
+	c, err := Dial(ts.URL)
+	if err != nil {
+		t.Fatal(err)
+	}
+	c.SetHeader("user-agent", "ua-testing")
+	c.SetHeader("origin", "origin.example.com")
+
+	// Request peer information.
+	var info PeerInfo
+	if err := c.Call(&info, "test_peerInfo"); err != nil {
+		t.Fatal(err)
+	}
+
+	if info.RemoteAddr == "" {
+		t.Error("RemoteAddr not set")
+	}
+	if info.Transport != "http" {
+		t.Errorf("wrong Transport %q", info.Transport)
+	}
+	if info.HTTP.Version != "HTTP/1.1" {
+		t.Errorf("wrong HTTP.Version %q", info.HTTP.Version)
+	}
+	if info.HTTP.UserAgent != "ua-testing" {
+		t.Errorf("wrong HTTP.UserAgent %q", info.HTTP.UserAgent)
+	}
+	if info.HTTP.Origin != "origin.example.com" {
+		t.Errorf("wrong HTTP.Origin %q", info.HTTP.UserAgent)
 	}
 }

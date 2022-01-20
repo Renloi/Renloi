@@ -1,18 +1,18 @@
-// Copyright 2016 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 //go:build none
 // +build none
@@ -660,7 +660,7 @@ func doDebianSource(cmdline []string) {
 	// Create Debian packages and upload them.
 	for _, pkg := range debPackages {
 		for distro, goboot := range debDistroGoBoots {
-			// Prepare the debian package with the renloi sources.
+			// Prepare the debian package with the Renloi sources.
 			meta := newDebMetadata(distro, goboot, *signer, env, now, pkg.Name, pkg.Version, pkg.Executables)
 			pkgdir := stageDebianSource(*workdir, meta)
 
@@ -775,7 +775,7 @@ type debMetadata struct {
 
 	PackageName string
 
-	// renloi version being built. Note that this
+	// Renloi version being built. Note that this
 	// is not the debian package version. The package version
 	// is constructed by VersionString.
 	Version string
@@ -803,7 +803,7 @@ func (d debExecutable) Package() string {
 func newDebMetadata(distro, goboot, author string, env build.Environment, t time.Time, name string, version string, exes []debExecutable) debMetadata {
 	if author == "" {
 		// No signing key, use default author.
-		author = "Ethereum Builds <fjl@renloi.org>"
+		author = "Ethereum Builds <fjl@ethereum.org>"
 	}
 	return debMetadata{
 		GoBootPackage: goboot,

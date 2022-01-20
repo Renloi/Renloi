@@ -1,18 +1,18 @@
-// Copyright 2018 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 // +build none
 
@@ -88,13 +88,13 @@ var (
 	licenseCommentRE = regexp.MustCompile(`^//\s*(Copyright|This file is part of).*?\n(?://.*?\n)*\n*`)
 
 	// this text appears at the start of AUTHORS
-	authorsFileHeader = "# This is the official list of renloi authors for copyright purposes.\n\n"
+	authorsFileHeader = "# This is the official list of Renloi authors for copyright purposes.\n\n"
 )
 
 // this template generates the license comment.
 // its input is an info structure.
 var licenseT = template.Must(template.New("").Parse(`
-// Copyright {{.Year}} The renloi Authors
+// Copyright {{.Year}} The Renloi Authors
 // This file is part of {{.Whole false}}.
 //
 // {{.Whole true}} is free software: you can redistribute it and/or modify
@@ -133,12 +133,12 @@ func (i info) ShortLicense() string {
 
 func (i info) Whole(startOfSentence bool) string {
 	if i.gpl() {
-		return "renloi"
+		return "Renloi"
 	}
 	if startOfSentence {
-		return "The renloi library"
+		return "The Renloi library"
 	}
-	return "the renloi library"
+	return "the Renloi library"
 }
 
 func (i info) gpl() bool {

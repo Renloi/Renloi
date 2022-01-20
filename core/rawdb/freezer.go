@@ -1,18 +1,18 @@
-// Copyright 2019 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package rawdb
 
@@ -71,7 +71,7 @@ const (
 //
 // - The append only nature ensures that disk writes are minimized.
 // - The memory mapping ensures we can max out system memory for caching without
-//   reserving it for renloi. This would also reduce the memory requirements
+//   reserving it for Renloi. This would also reduce the memory requirements
 //   of Renloi, and thus also GC overhead.
 type freezer struct {
 	// WARNING: The `frozen` field is accessed atomically. On 32 bit platforms, only
@@ -133,7 +133,7 @@ func newFreezer(datadir string, namespace string, readonly bool, maxTableSize ui
 
 	// Create the tables.
 	for name, disableSnappy := range tables {
-		table, err := newTable(datadir, name, readMeter, writeMeter, sizeGauge, maxTableSize, disableSnappy)
+		table, err := newTable(datadir, name, readMeter, writeMeter, sizeGauge, maxTableSize, disableSnappy, readonly)
 		if err != nil {
 			for _, table := range freezer.tables {
 				table.Close()
@@ -144,8 +144,15 @@ func newFreezer(datadir string, namespace string, readonly bool, maxTableSize ui
 		freezer.tables[name] = table
 	}
 
-	// Truncate all tables to common length.
-	if err := freezer.repair(); err != nil {
+	if freezer.readonly {
+		// In readonly mode only validate, don't truncate.
+		// validate also sets `freezer.frozen`.
+		err = freezer.validate()
+	} else {
+		// Truncate all tables to common length.
+		err = freezer.repair()
+	}
+	if err != nil {
 		for _, table := range freezer.tables {
 			table.Close()
 		}
@@ -305,6 +312,33 @@ func (f *freezer) Sync() error {
 	if errs != nil {
 		return fmt.Errorf("%v", errs)
 	}
+	return nil
+}
+
+// validate checks that every table has the same length.
+// Used instead of `repair` in readonly mode.
+func (f *freezer) validate() error {
+	if len(f.tables) == 0 {
+		return nil
+	}
+	var (
+		length uint64
+		name   string
+	)
+	// Hack to get length of any table
+	for kind, table := range f.tables {
+		length = atomic.LoadUint64(&table.items)
+		name = kind
+		break
+	}
+	// Now check every table against that length
+	for kind, table := range f.tables {
+		items := atomic.LoadUint64(&table.items)
+		if length != items {
+			return fmt.Errorf("freezer tables %s and %s have differing lengths: %d != %d", kind, name, items, length)
+		}
+	}
+	atomic.StoreUint64(&f.frozen, length)
 	return nil
 }
 

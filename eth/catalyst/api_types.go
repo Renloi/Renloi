@@ -1,22 +1,23 @@
-// Copyright 2020 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2022 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package catalyst
 
 import (
+	"fmt"
 	"math/big"
 
 	"github.com/renloi/renloi/common"
@@ -69,17 +70,6 @@ type executableDataMarshaling struct {
 	Transactions  []hexutil.Bytes
 }
 
-//go:generate go run github.com/fjl/gencodec -type PayloadResponse -field-override payloadResponseMarshaling -out gen_payload.go
-
-type PayloadResponse struct {
-	PayloadID uint64 `json:"payloadId"`
-}
-
-// JSON type overrides for payloadResponse.
-type payloadResponseMarshaling struct {
-	PayloadID hexutil.Uint64
-}
-
 type NewBlockResponse struct {
 	Valid bool `json:"valid"`
 }
@@ -102,9 +92,28 @@ type ConsensusValidatedParams struct {
 	Status    string      `json:"status"`
 }
 
+// PayloadID is an identifier of the payload build process
+type PayloadID [8]byte
+
+func (b PayloadID) String() string {
+	return hexutil.Encode(b[:])
+}
+
+func (b PayloadID) MarshalText() ([]byte, error) {
+	return hexutil.Bytes(b[:]).MarshalText()
+}
+
+func (b *PayloadID) UnmarshalText(input []byte) error {
+	err := hexutil.UnmarshalFixedText("PayloadID", input, b[:])
+	if err != nil {
+		return fmt.Errorf("invalid payload id %q: %w", input, err)
+	}
+	return nil
+}
+
 type ForkChoiceResponse struct {
-	Status    string         `json:"status"`
-	PayloadID *hexutil.Bytes `json:"payloadId"`
+	Status    string     `json:"status"`
+	PayloadID *PayloadID `json:"payloadId"`
 }
 
 type ForkchoiceStateV1 struct {

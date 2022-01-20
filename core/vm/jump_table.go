@@ -1,18 +1,18 @@
-// Copyright 2015 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package vm
 
@@ -93,8 +93,8 @@ func newMergeInstructionSet() JumpTable {
 // contantinople, istanbul, petersburg, berlin and london instructions.
 func newLondonInstructionSet() JumpTable {
 	instructionSet := newBerlinInstructionSet()
-	enable3529(&instructionSet) // EIP-3529: Reduction in refunds https://eips.renloi.org/EIPS/eip-3529
-	enable3198(&instructionSet) // Base fee opcode https://eips.renloi.org/EIPS/eip-3198
+	enable3529(&instructionSet) // EIP-3529: Reduction in refunds https://eips.ethereum.org/EIPS/eip-3529
+	enable3198(&instructionSet) // Base fee opcode https://eips.ethereum.org/EIPS/eip-3198
 	return validate(instructionSet)
 }
 
@@ -102,7 +102,7 @@ func newLondonInstructionSet() JumpTable {
 // contantinople, istanbul, petersburg and berlin instructions.
 func newBerlinInstructionSet() JumpTable {
 	instructionSet := newIstanbulInstructionSet()
-	enable2929(&instructionSet) // Access lists for trie accesses https://eips.renloi.org/EIPS/eip-2929
+	enable2929(&instructionSet) // Access lists for trie accesses https://eips.ethereum.org/EIPS/eip-2929
 	return validate(instructionSet)
 }
 
@@ -111,9 +111,9 @@ func newBerlinInstructionSet() JumpTable {
 func newIstanbulInstructionSet() JumpTable {
 	instructionSet := newConstantinopleInstructionSet()
 
-	enable1344(&instructionSet) // ChainID opcode - https://eips.renloi.org/EIPS/eip-1344
-	enable1884(&instructionSet) // Reprice reader opcodes - https://eips.renloi.org/EIPS/eip-1884
-	enable2200(&instructionSet) // Net metered SSTORE - https://eips.renloi.org/EIPS/eip-2200
+	enable1344(&instructionSet) // ChainID opcode - https://eips.ethereum.org/EIPS/eip-1344
+	enable1884(&instructionSet) // Reprice reader opcodes - https://eips.ethereum.org/EIPS/eip-1884
+	enable2200(&instructionSet) // Net metered SSTORE - https://eips.ethereum.org/EIPS/eip-2200
 
 	return validate(instructionSet)
 }

@@ -1,18 +1,18 @@
-// Copyright 2017 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package ethash
 
@@ -47,30 +47,30 @@ var (
 
 	// calcDifficultyEip4345 is the difficulty adjustment algorithm as specified by EIP 4345.
 	// It offsets the bomb a total of 10.7M blocks.
-	// Specification EIP-4345: https://eips.renloi.org/EIPS/eip-4345
+	// Specification EIP-4345: https://eips.ethereum.org/EIPS/eip-4345
 	calcDifficultyEip4345 = makeDifficultyCalculator(big.NewInt(10_700_000))
 
 	// calcDifficultyEip3554 is the difficulty adjustment algorithm as specified by EIP 3554.
 	// It offsets the bomb a total of 9.7M blocks.
-	// Specification EIP-3554: https://eips.renloi.org/EIPS/eip-3554
+	// Specification EIP-3554: https://eips.ethereum.org/EIPS/eip-3554
 	calcDifficultyEip3554 = makeDifficultyCalculator(big.NewInt(9700000))
 
 	// calcDifficultyEip2384 is the difficulty adjustment algorithm as specified by EIP 2384.
 	// It offsets the bomb 4M blocks from Constantinople, so in total 9M blocks.
-	// Specification EIP-2384: https://eips.renloi.org/EIPS/eip-2384
+	// Specification EIP-2384: https://eips.ethereum.org/EIPS/eip-2384
 	calcDifficultyEip2384 = makeDifficultyCalculator(big.NewInt(9000000))
 
 	// calcDifficultyConstantinople is the difficulty adjustment algorithm for Constantinople.
 	// It returns the difficulty that a new block should have when created at time given the
 	// parent block's time and difficulty. The calculation uses the Byzantium rules, but with
 	// bomb offset 5M.
-	// Specification EIP-1234: https://eips.renloi.org/EIPS/eip-1234
+	// Specification EIP-1234: https://eips.ethereum.org/EIPS/eip-1234
 	calcDifficultyConstantinople = makeDifficultyCalculator(big.NewInt(5000000))
 
 	// calcDifficultyByzantium is the difficulty adjustment algorithm. It returns
 	// the difficulty that a new block should have when created at time given the
 	// parent block's time and difficulty. The calculation uses the Byzantium rules.
-	// Specification EIP-649: https://eips.renloi.org/EIPS/eip-649
+	// Specification EIP-649: https://eips.ethereum.org/EIPS/eip-649
 	calcDifficultyByzantium = makeDifficultyCalculator(big.NewInt(3000000))
 )
 
@@ -404,7 +404,7 @@ func makeDifficultyCalculator(bombDelay *big.Int) func(time uint64, parent *type
 			x.Set(params.MinimumDifficulty)
 		}
 		// calculate a fake block number for the ice-age delay
-		// Specification: https://eips.renloi.org/EIPS/eip-1234
+		// Specification: https://eips.ethereum.org/EIPS/eip-1234
 		fakeBlockNumber := new(big.Int)
 		if parent.Number.Cmp(bombDelayFromParent) >= 0 {
 			fakeBlockNumber = fakeBlockNumber.Sub(parent.Number, bombDelayFromParent)

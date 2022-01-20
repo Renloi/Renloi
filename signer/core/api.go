@@ -1,18 +1,18 @@
-// Copyright 2018 The renloi Authors
-// This file is part of the renloi library.
+// Copyright 2021 The Renloi Authors
+// This file is part of the Renloi library.
 //
-// The renloi library is free software: you can redistribute it and/or modify
+// The Renloi library is free software: you can redistribute it and/or modify
 // it under the terms of the GNU Lesser General Public License as published by
 // the Free Software Foundation, either version 3 of the License, or
 // (at your option) any later version.
 //
-// The renloi library is distributed in the hope that it will be useful,
+// The Renloi library is distributed in the hope that it will be useful,
 // but WITHOUT ANY WARRANTY; without even the implied warranty of
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
 // GNU Lesser General Public License for more details.
 //
 // You should have received a copy of the GNU Lesser General Public License
-// along with the renloi library. If not, see <http://www.gnu.org/licenses/>.
+// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
 
 package core
 
@@ -33,6 +33,7 @@ import (
 	"github.com/renloi/renloi/common/hexutil"
 	"github.com/renloi/renloi/internal/ethapi"
 	"github.com/renloi/renloi/log"
+	"github.com/renloi/renloi/rpc"
 	"github.com/renloi/renloi/signer/core/apitypes"
 	"github.com/renloi/renloi/signer/storage"
 )
@@ -188,23 +189,24 @@ func StartClefAccountManager(ksLocation string, nousb, lightKDF bool, scpath str
 
 // MetadataFromContext extracts Metadata from a given context.Context
 func MetadataFromContext(ctx context.Context) Metadata {
+	info := rpc.PeerInfoFromContext(ctx)
+
 	m := Metadata{"NA", "NA", "NA", "", ""} // batman
 
-	if v := ctx.Value("remote"); v != nil {
-		m.Remote = v.(string)
+	if info.Transport != "" {
+		if info.Transport == "http" {
+			m.Scheme = info.HTTP.Version
+		}
+		m.Scheme = info.Transport
 	}
-	if v := ctx.Value("scheme"); v != nil {
-		m.Scheme = v.(string)
+	if info.RemoteAddr != "" {
+		m.Remote = info.RemoteAddr
 	}
-	if v := ctx.Value("local"); v != nil {
-		m.Local = v.(string)
+	if info.HTTP.Host != "" {
+		m.Local = info.HTTP.Host
 	}
-	if v := ctx.Value("Origin"); v != nil {
-		m.Origin = v.(string)
-	}
-	if v := ctx.Value("User-Agent"); v != nil {
-		m.UserAgent = v.(string)
-	}
+	m.Origin = info.HTTP.Origin
+	m.UserAgent = info.HTTP.UserAgent
 	return m
 }
 
