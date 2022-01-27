@@ -3,11 +3,6 @@
 Renloi is an open-source, non-profit EVM-compatible Proof of Authority blockchain network.
 ## Vision
 A digital decentralized version of cash will allow extremely fast transactions and low fees and an open-source fair economy. Renloi's decentralized finance (DeFi) ecosystem never sleeps or discriminates will allow anyone to make payments using only their internet connection. With Renloi, you can send, receive, borrow, earn interest, and even stream funds anywhere and anytime. To operate, you just need to set up a wallet, where you will be in complete control of your personal data.
-## Build Renloi
-Make sure you have golang installed.
-Build for your operating system:
-
-`$ make renloi`
 
 ## Executables
 
@@ -23,6 +18,18 @@ The Renloi source comes with several executables found in the `cmd` directory.
 |     `evm`     | Developer utility version of the EVM (Ethereum Virtual Machine) that is capable of running bytecode snippets within a configurable environment and execution mode. Its purpose is to allow isolated, fine-grained debugging of EVM opcodes (e.g. `evm --code 60ff60ff --debug run`).                                                                                                                                                                                                                                                                     |
 |   `rlpdump`   | Developer utility tool to convert binary RLP ([Recursive Length Prefix](https://eth.wiki/en/fundamentals/rlp)) dumps (data encoding used by the Renloi protocol both network as well as consensus wise) to user-friendlier hierarchical representation (e.g. `rlpdump --hex CE0183FFFFFFC4C304050583616263`).                                                                                                                                                                                                                                 |
 |   `puppeth`   | a CLI wizard that aids in creating a new Ethereum-compatible network.     
+
+## Build Renloi
+Make sure you have golang installed.
+Build for your operating system:
+
+`$ make renloi`
+
+## Build all executables
+Make sure you have golang installed.
+Build for your operating system:
+
+`$ make all`
 
 ## Renloi's community
 * Website https://renloi.org
