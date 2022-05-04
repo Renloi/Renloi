@@ -5,7 +5,7 @@ This repository contains the Renloi network client.
 ## Vision
 A digital decentralized version of cash will allow extremely fast transactions and low fees and an open-source fair economy. Renloi's decentralized finance (DeFi) ecosystem never sleeps or discriminates will allow anyone to make payments using only their internet connection. With Renloi, you can send, receive, borrow, earn interest, and even stream funds anywhere and anytime. To operate, you just need to set up a wallet, where you will be in complete control of your personal data.
 
-## Commands
+## Usage
 
 |    Command    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | :-----------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
