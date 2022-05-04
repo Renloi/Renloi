@@ -1,6 +1,6 @@
 ![IMG](https://user-images.githubusercontent.com/96906027/147944368-66d18a6e-81cc-4c05-b26b-5c1872c60a16.png)
 # Renloi
-Renloi is an open-source, EVM-compatible Proof of Authority blockchain network.
+Renloi is an open-source, EVM-compatible Proof of Stake blockchain network.
 This repository contains the Renloi network client.
 ## Vision
 A digital decentralized version of cash will allow extremely fast transactions and low fees and an open-source fair economy. Renloi's decentralized finance (DeFi) ecosystem never sleeps or discriminates will allow anyone to make payments using only their internet connection. With Renloi, you can send, receive, borrow, earn interest, and even stream funds anywhere and anytime. To operate, you just need to set up a wallet, where you will be in complete control of your personal data.
