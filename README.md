@@ -9,19 +9,20 @@ A digital decentralized version of cash will allow extremely fast transactions a
 
 |    Command    | Description                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          |
 | :-----------: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **`backup`**   | Create blockchain backup file by fetching blockchain data from the running node. 
-| **`completion`**    | Generate the autocompletion script for the specified shell.                                                                                   |
-| **`help`**   | Help about any command.                                                                                                                              |
-| **`ibft`**    | Top level IBFT command for interacting with the IBFT consensus. Only accepts subcommands.                                                           |
-| **`license`**   | Returns Renloi license and dependency attributions.                                                                                               |
-| **`loadbot`**     | Runs the loadbot to stress test the network.                                                                                                    |
-| **`monitor`**   | Starts logging block add / remove events on the blockchain.                                                                                       |
-|  **`peers`**   | Top level command for interacting with the network peers. Only accepts subcommands.                                                                |
-| **`secrets`**   | Top level SecretsManager command for interacting with secrets functionality. Only accepts subcommands.                                            |
-|  **`server`**    | The default command that starts the Renloi client, by bootstrapping all modules together                                                         |
-|  **`status`**   | Returns the status of the Renloi client                                                                                                           |
-|   **`txpool`**    | Top level IBFT command for interacting with the IBFT consensus. Only accepts subcommands.                                                       |
-|  **`version`**   | Returns Renloi license and dependency attributions.                                                                                              |                                                                                                                                                                       |
+| **`backup`**     | Create blockchain backup file by fetching blockchain data from the running node. 
+| **`completion`** | Generate the autocompletion script for the specified shell.                                                                                      |
+| **`genesis`**    | Generates the genesis configuration file with the passed in parameters.                                                                          |
+| **`help`**       | Help about any command.                                                                                                                          |
+| **`ibft`**       | Top level IBFT command for interacting with the IBFT consensus. Only accepts subcommands.                                                        |
+| **`license`**    | Returns Renloi license and dependency attributions.                                                                                              | 
+| **`loadbot`**    | Runs the loadbot to stress test the network.                                                                                                     |
+| **`monitor`**    | Starts logging block add / remove events on the blockchain.                                                                                      |
+| **`peers`**      | Top level command for interacting with the network peers. Only accepts subcommands.                                                              |
+| **`secrets`**    | Top level SecretsManager command for interacting with secrets functionality. Only accepts subcommands.                                           |
+| **`server`**     | The default command that starts the Renloi client, by bootstrapping all modules together                                                         |
+| **`status`**     | Returns the status of the Renloi client                                                                                                          |
+| **`txpool`**     | Top level command for interacting with the transaction pool. Only accepts subcommands..                                                          | 
+| **`version`**    | Returns the current Renloi version.                                                                                                              |                                                                                                                                                                    
 ## Build Renloi
 Make sure you have the latest version of golang installed.
 Build for your operating system:
