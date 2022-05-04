@@ -1,285 +1,292 @@
-// Copyright 2021 The Renloi Authors
-// This file is part of the Renloi library.
-//
-// The Renloi library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Renloi library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
-
 package crypto
 
 import (
-	"bufio"
+	"bytes"
+	goCrypto "crypto"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
-	"encoding/hex"
 	"errors"
 	"fmt"
-	"hash"
-	"io"
-	"io/ioutil"
 	"math/big"
-	"os"
 
-	"github.com/renloi/renloi/common"
-	"github.com/renloi/renloi/common/math"
-	"github.com/renloi/renloi/rlp"
+	"github.com/renloi/Renloi/helper/hex"
+	"github.com/renloi/Renloi/helper/keystore"
+	"github.com/renloi/Renloi/secrets"
+	"github.com/renloi/Renloi/types"
+	"github.com/btcsuite/btcd/btcec"
 	"golang.org/x/crypto/sha3"
+
+	"github.com/umbracle/fastrlp"
 )
-
-//SignatureLength indicates the byte length required to carry a signature with recovery id.
-const SignatureLength = 64 + 1 // 64 bytes ECDSA signature + 1 byte recovery id
-
-// RecoveryIDOffset points to the byte offset within the signature that contains the recovery id.
-const RecoveryIDOffset = 64
-
-// DigestLength sets the signature digest exact length
-const DigestLength = 32
 
 var (
-	secp256k1N, _  = new(big.Int).SetString("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", 16)
-	secp256k1halfN = new(big.Int).Div(secp256k1N, big.NewInt(2))
+	big1 = big.NewInt(1)
 )
 
-var errInvalidPubkey = errors.New("invalid secp256k1 public key")
+// S256 is the secp256k1 elliptic curve
+var S256 = btcec.S256()
 
-// KeccakState wraps sha3.state. In addition to the usual hash methods, it also supports
-// Read to get a variable amount of data from the hash state. Read is faster than Sum
-// because it doesn't copy the internal state, but also modifies the internal state.
-type KeccakState interface {
-	hash.Hash
-	Read([]byte) (int, error)
-}
+var (
+	secp256k1N = hex.MustDecodeHex("0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
+	one        = []byte{0x01}
+)
 
-// NewKeccakState creates a new KeccakState
-func NewKeccakState() KeccakState {
-	return sha3.NewLegacyKeccak256().(KeccakState)
-}
-
-// HashData hashes the provided data using the KeccakState and returns a 32 byte hash
-func HashData(kh KeccakState, data []byte) (h common.Hash) {
-	kh.Reset()
-	kh.Write(data)
-	kh.Read(h[:])
-	return h
-}
-
-// Keccak256 calculates and returns the Keccak256 hash of the input data.
-func Keccak256(data ...[]byte) []byte {
-	b := make([]byte, 32)
-	d := NewKeccakState()
-	for _, b := range data {
-		d.Write(b)
-	}
-	d.Read(b)
-	return b
-}
-
-// Keccak256Hash calculates and returns the Keccak256 hash of the input data,
-// converting it to an internal Hash data structure.
-func Keccak256Hash(data ...[]byte) (h common.Hash) {
-	d := NewKeccakState()
-	for _, b := range data {
-		d.Write(b)
-	}
-	d.Read(h[:])
-	return h
-}
-
-// Keccak512 calculates and returns the Keccak512 hash of the input data.
-func Keccak512(data ...[]byte) []byte {
-	d := sha3.NewLegacyKeccak512()
-	for _, b := range data {
-		d.Write(b)
-	}
-	return d.Sum(nil)
-}
-
-// CreateAddress creates an ethereum address given the bytes and the nonce
-func CreateAddress(b common.Address, nonce uint64) common.Address {
-	data, _ := rlp.EncodeToBytes([]interface{}{b, nonce})
-	return common.BytesToAddress(Keccak256(data)[12:])
-}
-
-// CreateAddress2 creates an ethereum address given the address bytes, initial
-// contract code hash and a salt.
-func CreateAddress2(b common.Address, salt [32]byte, inithash []byte) common.Address {
-	return common.BytesToAddress(Keccak256([]byte{0xff}, b.Bytes(), salt[:], inithash)[12:])
-}
-
-// ToECDSA creates a private key with the given D value.
-func ToECDSA(d []byte) (*ecdsa.PrivateKey, error) {
-	return toECDSA(d, true)
-}
-
-// ToECDSAUnsafe blindly converts a binary blob to a private key. It should almost
-// never be used unless you are sure the input is valid and want to avoid hitting
-// errors due to bad origin encoding (0 prefixes cut off).
-func ToECDSAUnsafe(d []byte) *ecdsa.PrivateKey {
-	priv, _ := toECDSA(d, false)
-	return priv
-}
-
-// toECDSA creates a private key with the given D value. The strict parameter
-// controls whether the key's length should be enforced at the curve size or
-// it can also accept legacy encodings (0 prefixes).
-func toECDSA(d []byte, strict bool) (*ecdsa.PrivateKey, error) {
-	priv := new(ecdsa.PrivateKey)
-	priv.PublicKey.Curve = S256()
-	if strict && 8*len(d) != priv.Params().BitSize {
-		return nil, fmt.Errorf("invalid length, need %d bits", priv.Params().BitSize)
-	}
-	priv.D = new(big.Int).SetBytes(d)
-
-	// The priv.D must < N
-	if priv.D.Cmp(secp256k1N) >= 0 {
-		return nil, fmt.Errorf("invalid private key, >=N")
-	}
-	// The priv.D must not be zero or negative.
-	if priv.D.Sign() <= 0 {
-		return nil, fmt.Errorf("invalid private key, zero or negative")
-	}
-
-	priv.PublicKey.X, priv.PublicKey.Y = priv.PublicKey.Curve.ScalarBaseMult(d)
-	if priv.PublicKey.X == nil {
-		return nil, errors.New("invalid private key")
-	}
-	return priv, nil
-}
-
-// FromECDSA exports a private key into a binary dump.
-func FromECDSA(priv *ecdsa.PrivateKey) []byte {
-	if priv == nil {
-		return nil
-	}
-	return math.PaddedBigBytes(priv.D, priv.Params().BitSize/8)
-}
-
-// UnmarshalPubkey converts bytes to a secp256k1 public key.
-func UnmarshalPubkey(pub []byte) (*ecdsa.PublicKey, error) {
-	x, y := elliptic.Unmarshal(S256(), pub)
-	if x == nil {
-		return nil, errInvalidPubkey
-	}
-	return &ecdsa.PublicKey{Curve: S256(), X: x, Y: y}, nil
-}
-
-func FromECDSAPub(pub *ecdsa.PublicKey) []byte {
-	if pub == nil || pub.X == nil || pub.Y == nil {
-		return nil
-	}
-	return elliptic.Marshal(S256(), pub.X, pub.Y)
-}
-
-// HexToECDSA parses a secp256k1 private key.
-func HexToECDSA(hexkey string) (*ecdsa.PrivateKey, error) {
-	b, err := hex.DecodeString(hexkey)
-	if byteErr, ok := err.(hex.InvalidByteError); ok {
-		return nil, fmt.Errorf("invalid hex character %q in private key", byte(byteErr))
-	} else if err != nil {
-		return nil, errors.New("invalid hex data for private key")
-	}
-	return ToECDSA(b)
-}
-
-// LoadECDSA loads a secp256k1 private key from the given file.
-func LoadECDSA(file string) (*ecdsa.PrivateKey, error) {
-	fd, err := os.Open(file)
-	if err != nil {
-		return nil, err
-	}
-	defer fd.Close()
-
-	r := bufio.NewReader(fd)
-	buf := make([]byte, 64)
-	n, err := readASCII(buf, r)
-	if err != nil {
-		return nil, err
-	} else if n != len(buf) {
-		return nil, fmt.Errorf("key file too short, want 64 hex characters")
-	}
-	if err := checkKeyFileEnd(r); err != nil {
-		return nil, err
-	}
-
-	return HexToECDSA(string(buf))
-}
-
-// readASCII reads into 'buf', stopping when the buffer is full or
-// when a non-printable control character is encountered.
-func readASCII(buf []byte, r *bufio.Reader) (n int, err error) {
-	for ; n < len(buf); n++ {
-		buf[n], err = r.ReadByte()
-		switch {
-		case err == io.EOF || buf[n] < '!':
-			return n, nil
-		case err != nil:
-			return n, err
+func trimLeftZeros(b []byte) []byte {
+	i := 0
+	for i = range b {
+		if b[i] != 0 {
+			break
 		}
 	}
-	return n, nil
+
+	return b[i:]
 }
 
-// checkKeyFileEnd skips over additional newlines at the end of a key file.
-func checkKeyFileEnd(r *bufio.Reader) error {
-	for i := 0; ; i++ {
-		b, err := r.ReadByte()
-		switch {
-		case err == io.EOF:
-			return nil
-		case err != nil:
-			return err
-		case b != '\n' && b != '\r':
-			return fmt.Errorf("invalid character %q at end of key file", b)
-		case i >= 2:
-			return errors.New("key file too long, want 64 hex characters")
-		}
+// ValidateSignatureValues checks if the signature values are correct
+func ValidateSignatureValues(v byte, r, s *big.Int) bool {
+	// TODO: ECDSA malleability
+	if r == nil || s == nil {
+		return false
 	}
+
+	if v > 1 {
+		return false
+	}
+
+	rr := r.Bytes()
+	rr = trimLeftZeros(rr)
+
+	if bytes.Compare(rr, secp256k1N) >= 0 || bytes.Compare(rr, one) < 0 {
+		return false
+	}
+
+	ss := s.Bytes()
+	ss = trimLeftZeros(ss)
+
+	if bytes.Compare(ss, secp256k1N) >= 0 || bytes.Compare(ss, one) < 0 {
+		return false
+	}
+
+	return true
 }
 
-// SaveECDSA saves a secp256k1 private key to the given file with
-// restrictive permissions. The key data is saved hex-encoded.
-func SaveECDSA(file string, key *ecdsa.PrivateKey) error {
-	k := hex.EncodeToString(FromECDSA(key))
-	return ioutil.WriteFile(file, []byte(k), 0600)
+var addressPool fastrlp.ArenaPool
+
+// CreateAddress creates an Ethereum address.
+func CreateAddress(addr types.Address, nonce uint64) types.Address {
+	a := addressPool.Get()
+	defer addressPool.Put(a)
+
+	v := a.NewArray()
+	v.Set(a.NewBytes(addr.Bytes()))
+	v.Set(a.NewUint(nonce))
+
+	dst := v.MarshalTo(nil)
+	dst = Keccak256(dst)[12:]
+
+	return types.BytesToAddress(dst)
 }
 
-// GenerateKey generates a new private key.
+var create2Prefix = []byte{0xff}
+
+// CreateAddress2 creates an Ethereum address following the CREATE2 Opcode.
+func CreateAddress2(addr types.Address, salt [32]byte, inithash []byte) types.Address {
+	return types.BytesToAddress(Keccak256(create2Prefix, addr.Bytes(), salt[:], Keccak256(inithash))[12:])
+}
+
+func ParsePrivateKey(buf []byte) (*ecdsa.PrivateKey, error) {
+	prv, _ := btcec.PrivKeyFromBytes(S256, buf)
+
+	return prv.ToECDSA(), nil
+}
+
+// MarshalPrivateKey serializes the private key's D value to a []byte
+func MarshalPrivateKey(priv *ecdsa.PrivateKey) ([]byte, error) {
+	return (*btcec.PrivateKey)(priv).Serialize(), nil
+}
+
+// GenerateKey generates a new key based on the secp256k1 elliptic curve.
 func GenerateKey() (*ecdsa.PrivateKey, error) {
-	return ecdsa.GenerateKey(S256(), rand.Reader)
+	return ecdsa.GenerateKey(S256, rand.Reader)
 }
 
-// ValidateSignatureValues verifies whether the signature values are valid with
-// the given chain rules. The v value is assumed to be either 0 or 1.
-func ValidateSignatureValues(v byte, r, s *big.Int, homestead bool) bool {
-	if r.Cmp(common.Big1) < 0 || s.Cmp(common.Big1) < 0 {
-		return false
+// ParsePublicKey parses bytes into a public key on the secp256k1 elliptic curve.
+func ParsePublicKey(buf []byte) (*ecdsa.PublicKey, error) {
+	x, y := elliptic.Unmarshal(S256, buf)
+	if x == nil || y == nil {
+		return nil, fmt.Errorf("cannot unmarshal")
 	}
-	// reject upper range of s values (ECDSA malleability)
-	// see discussion in secp256k1/libsecp256k1/include/secp256k1.h
-	if homestead && s.Cmp(secp256k1halfN) > 0 {
-		return false
-	}
-	// Frontier: allow s to be in full N range
-	return r.Cmp(secp256k1N) < 0 && s.Cmp(secp256k1N) < 0 && (v == 0 || v == 1)
+
+	return &ecdsa.PublicKey{Curve: S256, X: x, Y: y}, nil
 }
 
-func PubkeyToAddress(p ecdsa.PublicKey) common.Address {
-	pubBytes := FromECDSAPub(&p)
-	return common.BytesToAddress(Keccak256(pubBytes[1:])[12:])
+// MarshalPublicKey marshals a public key on the secp256k1 elliptic curve.
+func MarshalPublicKey(pub *ecdsa.PublicKey) []byte {
+	return elliptic.Marshal(S256, pub.X, pub.Y)
 }
 
-func zeroBytes(bytes []byte) {
-	for i := range bytes {
-		bytes[i] = 0
+func Ecrecover(hash, sig []byte) ([]byte, error) {
+	pub, err := RecoverPubkey(sig, hash)
+	if err != nil {
+		return nil, err
 	}
+
+	return MarshalPublicKey(pub), nil
+}
+
+// RecoverPubkey verifies the compact signature "signature" of "hash" for the
+// secp256k1 curve.
+func RecoverPubkey(signature, hash []byte) (*ecdsa.PublicKey, error) {
+	size := len(signature)
+	term := byte(27)
+
+	if signature[size-1] == 1 {
+		term = 28
+	}
+
+	sig := append([]byte{term}, signature[:size-1]...)
+	pub, _, err := btcec.RecoverCompact(S256, sig, hash)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return pub.ToECDSA(), nil
+}
+
+// Sign produces a compact signature of the data in hash with the given
+// private key on the secp256k1 curve.
+func Sign(priv *ecdsa.PrivateKey, hash []byte) ([]byte, error) {
+	sig, err := btcec.SignCompact(S256, (*btcec.PrivateKey)(priv), hash, false)
+	if err != nil {
+		return nil, err
+	}
+
+	term := byte(0)
+	if sig[0] == 28 {
+		term = 1
+	}
+
+	return append(sig, term)[1:], nil
+}
+
+// SigToPub returns the public key that created the given signature.
+func SigToPub(hash, sig []byte) (*ecdsa.PublicKey, error) {
+	s, err := Ecrecover(hash, sig)
+	if err != nil {
+		return nil, err
+	}
+
+	x, y := elliptic.Unmarshal(S256, s)
+
+	return &ecdsa.PublicKey{Curve: S256, X: x, Y: y}, nil
+}
+
+// Keccak256 calculates the Keccak256
+func Keccak256(v ...[]byte) []byte {
+	h := sha3.NewLegacyKeccak256()
+	for _, i := range v {
+		h.Write(i)
+	}
+
+	return h.Sum(nil)
+}
+
+// PubKeyToAddress returns the Ethereum address of a public key
+func PubKeyToAddress(pub *ecdsa.PublicKey) types.Address {
+	buf := Keccak256(MarshalPublicKey(pub)[1:])[12:]
+
+	return types.BytesToAddress(buf)
+}
+
+// GetAddressFromKey extracts an address from the private key
+func GetAddressFromKey(key goCrypto.PrivateKey) (types.Address, error) {
+	privateKeyConv, ok := key.(*ecdsa.PrivateKey)
+	if !ok {
+		return types.ZeroAddress, errors.New("unable to assert type")
+	}
+
+	publicKey := privateKeyConv.PublicKey
+
+	return PubKeyToAddress(&publicKey), nil
+}
+
+// generateKeyAndMarshal generates a new private key and serializes it to a byte array
+func generateKeyAndMarshal() ([]byte, error) {
+	key, err := GenerateKey()
+	if err != nil {
+		return nil, err
+	}
+
+	buf, err := MarshalPrivateKey(key)
+	if err != nil {
+		return nil, err
+	}
+
+	return buf, nil
+}
+
+// BytesToPrivateKey reads the input byte array and constructs a private key if possible
+func BytesToPrivateKey(input []byte) (*ecdsa.PrivateKey, error) {
+	// The key file on disk should be encoded in Base64,
+	// so it must be decoded before it can be parsed by ParsePrivateKey
+	decoded, err := hex.DecodeString(string(input))
+	if err != nil {
+		return nil, err
+	}
+
+	// Make sure the key is properly formatted
+	if len(decoded) != 32 {
+		// Key must be exactly 64 chars (32B) long
+		return nil, fmt.Errorf("invalid key length (%dB), should be 32B", len(decoded))
+	}
+
+	// Convert decoded bytes to a private key
+	key, err := ParsePrivateKey(decoded)
+	if err != nil {
+		return nil, err
+	}
+
+	return key, nil
+}
+
+// GenerateOrReadPrivateKey generates a private key at the specified path,
+// or reads it if a key file is present
+func GenerateOrReadPrivateKey(path string) (*ecdsa.PrivateKey, error) {
+	keyBuff, err := keystore.CreateIfNotExists(path, generateKeyAndMarshal)
+	if err != nil {
+		return nil, err
+	}
+
+	privateKey, err := BytesToPrivateKey(keyBuff)
+	if err != nil {
+		return nil, fmt.Errorf("unable to execute byte array -> private key conversion, %w", err)
+	}
+
+	return privateKey, nil
+}
+
+// GenerateAndEncodePrivateKey returns a newly generated private key and the Base64 encoding of that private key
+func GenerateAndEncodePrivateKey() (*ecdsa.PrivateKey, []byte, error) {
+	keyBuff, err := keystore.CreatePrivateKey(generateKeyAndMarshal)
+	if err != nil {
+		return nil, nil, err
+	}
+
+	privateKey, err := BytesToPrivateKey(keyBuff)
+	if err != nil {
+		return nil, nil, fmt.Errorf("unable to execute byte array -> private key conversion, %w", err)
+	}
+
+	return privateKey, keyBuff, nil
+}
+
+func ReadConsensusKey(manager secrets.SecretsManager) (*ecdsa.PrivateKey, error) {
+	validatorKey, err := manager.GetSecret(secrets.ValidatorKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return BytesToPrivateKey(validatorKey)
 }

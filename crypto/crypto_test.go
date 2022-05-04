@@ -1,300 +1,246 @@
-// Copyright 2021 The Renloi Authors
-// This file is part of the Renloi library.
-//
-// The Renloi library is free software: you can redistribute it and/or modify
-// it under the terms of the GNU Lesser General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// The Renloi library is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-// GNU Lesser General Public License for more details.
-//
-// You should have received a copy of the GNU Lesser General Public License
-// along with the Renloi library. If not, see <http://www.gnu.org/licenses/>.
-
 package crypto
 
 import (
-	"bytes"
-	"crypto/ecdsa"
-	"encoding/hex"
-	"io/ioutil"
 	"math/big"
 	"os"
-	"reflect"
+	"strconv"
+	"strings"
 	"testing"
+	"time"
 
-	"github.com/renloi/renloi/common"
-	"github.com/renloi/renloi/common/hexutil"
+	"github.com/renloi/Renloi/helper/hex"
+	"github.com/renloi/Renloi/types"
+	"github.com/stretchr/testify/assert"
 )
 
-var testAddrHex = "970e8128ab834e8eac17ab8e3812f010678cf791"
-var testPrivHex = "289c2857d4598e37fb9647507e47a309d6133539bf21a8b9cb6df88fd5232032"
+func TestKeyEncoding(t *testing.T) {
+	for i := 0; i < 10; i++ {
+		priv, _ := GenerateKey()
 
-// These tests are sanity checks.
-// They should ensure that we don't e.g. use Sha3-224 instead of Sha3-256
-// and that the sha3 library uses keccak-f permutation.
-func TestKeccak256Hash(t *testing.T) {
-	msg := []byte("abc")
-	exp, _ := hex.DecodeString("4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45")
-	checkhash(t, "Sha3-256-array", func(in []byte) []byte { h := Keccak256Hash(in); return h[:] }, msg, exp)
-}
+		// marshall private key
+		buf, err := MarshalPrivateKey(priv)
+		assert.NoError(t, err)
 
-func TestKeccak256Hasher(t *testing.T) {
-	msg := []byte("abc")
-	exp, _ := hex.DecodeString("4e03657aea45a94fc7d47ba826c8d667c0d1e6e33a64a036ec44f58fa12d6c45")
-	hasher := NewKeccakState()
-	checkhash(t, "Sha3-256-array", func(in []byte) []byte { h := HashData(hasher, in); return h[:] }, msg, exp)
-}
+		priv0, err := ParsePrivateKey(buf)
+		assert.NoError(t, err)
 
-func TestToECDSAErrors(t *testing.T) {
-	if _, err := HexToECDSA("0000000000000000000000000000000000000000000000000000000000000000"); err == nil {
-		t.Fatal("HexToECDSA should've returned error")
-	}
-	if _, err := HexToECDSA("ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"); err == nil {
-		t.Fatal("HexToECDSA should've returned error")
+		assert.Equal(t, priv, priv0)
+
+		// marshall public key
+		buf = MarshalPublicKey(&priv.PublicKey)
+
+		pub0, err := ParsePublicKey(buf)
+		assert.NoError(t, err)
+
+		assert.Equal(t, priv.PublicKey, *pub0)
 	}
 }
 
-func BenchmarkSha3(b *testing.B) {
-	a := []byte("hello world")
-	for i := 0; i < b.N; i++ {
-		Keccak256(a)
-	}
-}
-
-func TestUnmarshalPubkey(t *testing.T) {
-	key, err := UnmarshalPubkey(nil)
-	if err != errInvalidPubkey || key != nil {
-		t.Fatalf("expected error, got %v, %v", err, key)
-	}
-	key, err = UnmarshalPubkey([]byte{1, 2, 3})
-	if err != errInvalidPubkey || key != nil {
-		t.Fatalf("expected error, got %v, %v", err, key)
-	}
-
-	var (
-		enc, _ = hex.DecodeString("04760c4460e5336ac9bbd87952a3c7ec4363fc0a97bd31c86430806e287b437fd1b01abc6e1db640cf3106b520344af1d58b00b57823db3e1407cbc433e1b6d04d")
-		dec    = &ecdsa.PublicKey{
-			Curve: S256(),
-			X:     hexutil.MustDecodeBig("0x760c4460e5336ac9bbd87952a3c7ec4363fc0a97bd31c86430806e287b437fd1"),
-			Y:     hexutil.MustDecodeBig("0xb01abc6e1db640cf3106b520344af1d58b00b57823db3e1407cbc433e1b6d04d"),
-		}
-	)
-	key, err = UnmarshalPubkey(enc)
-	if err != nil {
-		t.Fatalf("expected no error, got %v", err)
-	}
-	if !reflect.DeepEqual(key, dec) {
-		t.Fatal("wrong result")
-	}
-}
-
-func TestSign(t *testing.T) {
-	key, _ := HexToECDSA(testPrivHex)
-	addr := common.HexToAddress(testAddrHex)
-
-	msg := Keccak256([]byte("foo"))
-	sig, err := Sign(msg, key)
-	if err != nil {
-		t.Errorf("Sign error: %s", err)
-	}
-	recoveredPub, err := Ecrecover(msg, sig)
-	if err != nil {
-		t.Errorf("ECRecover error: %s", err)
-	}
-	pubKey, _ := UnmarshalPubkey(recoveredPub)
-	recoveredAddr := PubkeyToAddress(*pubKey)
-	if addr != recoveredAddr {
-		t.Errorf("Address mismatch: want: %x have: %x", addr, recoveredAddr)
-	}
-
-	// should be equal to SigToPub
-	recoveredPub2, err := SigToPub(msg, sig)
-	if err != nil {
-		t.Errorf("ECRecover error: %s", err)
-	}
-	recoveredAddr2 := PubkeyToAddress(*recoveredPub2)
-	if addr != recoveredAddr2 {
-		t.Errorf("Address mismatch: want: %x have: %x", addr, recoveredAddr2)
-	}
-}
-
-func TestInvalidSign(t *testing.T) {
-	if _, err := Sign(make([]byte, 1), nil); err == nil {
-		t.Errorf("expected sign with hash 1 byte to error")
-	}
-	if _, err := Sign(make([]byte, 33), nil); err == nil {
-		t.Errorf("expected sign with hash 33 byte to error")
-	}
-}
-
-func TestNewContractAddress(t *testing.T) {
-	key, _ := HexToECDSA(testPrivHex)
-	addr := common.HexToAddress(testAddrHex)
-	genAddr := PubkeyToAddress(key.PublicKey)
-	// sanity check before using addr to create contract address
-	checkAddr(t, genAddr, addr)
-
-	caddr0 := CreateAddress(addr, 0)
-	caddr1 := CreateAddress(addr, 1)
-	caddr2 := CreateAddress(addr, 2)
-	checkAddr(t, common.HexToAddress("333c3310824b7c685133f2bedb2ca4b8b4df633d"), caddr0)
-	checkAddr(t, common.HexToAddress("8bda78331c916a08481428e4b07c96d3e916d165"), caddr1)
-	checkAddr(t, common.HexToAddress("c9ddedf451bc62ce88bf9292afb13df35b670699"), caddr2)
-}
-
-func TestLoadECDSA(t *testing.T) {
-	tests := []struct {
-		input string
-		err   string
+func TestCreate2(t *testing.T) {
+	cases := []struct {
+		address  string
+		salt     string
+		initCode string
+		result   string
 	}{
-		// good
-		{input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"},
-		{input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n"},
-		{input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n\r"},
-		{input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\r\n"},
-		{input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n\n"},
-		{input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n\r"},
-		// bad
 		{
-			input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
-			err:   "key file too short, want 64 hex characters",
+			"0x0000000000000000000000000000000000000000",
+			"0x0000000000000000000000000000000000000000000000000000000000000000",
+			"0x00",
+			"0x4D1A2e2bB4F88F0250f26Ffff098B0b30B26BF38",
 		},
 		{
-			input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde\n",
-			err:   "key file too short, want 64 hex characters",
+			"0xdeadbeef00000000000000000000000000000000",
+			"0x0000000000000000000000000000000000000000000000000000000000000000",
+			"0x00",
+			"0xB928f69Bb1D91Cd65274e3c79d8986362984fDA3",
 		},
 		{
-			input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdeX",
-			err:   "invalid hex character 'X' in private key",
+			"0xdeadbeef00000000000000000000000000000000",
+			"0x000000000000000000000000feed000000000000000000000000000000000000",
+			"0x00",
+			"0xD04116cDd17beBE565EB2422F2497E06cC1C9833",
 		},
 		{
-			input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdefX",
-			err:   "invalid character 'X' at end of key file",
+			"0x0000000000000000000000000000000000000000",
+			"0x0000000000000000000000000000000000000000000000000000000000000000",
+			"0xdeadbeef",
+			"0x70f2b2914A2a4b783FaEFb75f459A580616Fcb5e",
 		},
 		{
-			input: "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\n\n\n",
-			err:   "key file too long, want 64 hex characters",
+			"0x00000000000000000000000000000000deadbeef",
+			"0x00000000000000000000000000000000000000000000000000000000cafebabe",
+			"0xdeadbeef",
+			"0x60f3f640a8508fC6a86d45DF051962668E1e8AC7",
+		},
+		{
+			"0x00000000000000000000000000000000deadbeef",
+			"0x00000000000000000000000000000000000000000000000000000000cafebabe",
+			"0xdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeefdeadbeef",
+			"0x1d8bfDC5D46DC4f61D6b6115972536eBE6A8854C",
+		},
+		{
+			"0x0000000000000000000000000000000000000000",
+			"0x0000000000000000000000000000000000000000000000000000000000000000",
+			"0x",
+			"0xE33C0C7F7df4809055C3ebA6c09CFe4BaF1BD9e0",
 		},
 	}
 
-	for _, test := range tests {
-		f, err := ioutil.TempFile("", "loadecdsa_test.*.txt")
-		if err != nil {
-			t.Fatal(err)
-		}
-		filename := f.Name()
-		f.WriteString(test.input)
-		f.Close()
+	for _, c := range cases {
+		t.Run("", func(t *testing.T) {
+			address := types.StringToAddress(c.address)
+			initCode := hex.MustDecodeHex(c.initCode)
 
-		_, err = LoadECDSA(filename)
-		switch {
-		case err != nil && test.err == "":
-			t.Fatalf("unexpected error for input %q:\n  %v", test.input, err)
-		case err != nil && err.Error() != test.err:
-			t.Fatalf("wrong error for input %q:\n  %v", test.input, err)
-		case err == nil && test.err != "":
-			t.Fatalf("LoadECDSA did not return error for input %q", test.input)
-		}
-	}
-}
+			saltRaw := hex.MustDecodeHex(c.salt)
+			if len(saltRaw) != 32 {
+				t.Fatal("Salt length must be 32 bytes")
+			}
 
-func TestSaveECDSA(t *testing.T) {
-	f, err := ioutil.TempFile("", "saveecdsa_test.*.txt")
-	if err != nil {
-		t.Fatal(err)
-	}
-	file := f.Name()
-	f.Close()
-	defer os.Remove(file)
+			salt := [32]byte{}
+			copy(salt[:], saltRaw[:])
 
-	key, _ := HexToECDSA(testPrivHex)
-	if err := SaveECDSA(file, key); err != nil {
-		t.Fatal(err)
-	}
-	loaded, err := LoadECDSA(file)
-	if err != nil {
-		t.Fatal(err)
-	}
-	if !reflect.DeepEqual(key, loaded) {
-		t.Fatal("loaded key not equal to saved key")
+			res := CreateAddress2(address, salt, initCode)
+
+			// values in the test cases are in EIP155 format, toLower until
+			// the EIP155 is done.
+			assert.Equal(t, strings.ToLower(c.result), strings.ToLower(res.String()))
+		})
 	}
 }
 
 func TestValidateSignatureValues(t *testing.T) {
-	check := func(expected bool, v byte, r, s *big.Int) {
-		if ValidateSignatureValues(v, r, s, false) != expected {
-			t.Errorf("mismatch for v: %d r: %d s: %d want: %v", v, r, s, expected)
-		}
+	one := big.NewInt(1)
+	zero := big.NewInt(0)
+	secp256k1N, _ := new(big.Int).SetString("fffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141", 16)
+
+	limit := secp256k1N
+	limitMinus1 := new(big.Int).Sub(secp256k1N, big1)
+
+	cases := []struct {
+		homestead bool
+		v         byte
+		r         *big.Int
+		s         *big.Int
+		res       bool
+	}{
+		// correct v, r, s
+		{v: 0, r: one, s: one, res: true},
+		{v: 1, r: one, s: one, res: true},
+		// incorrect v, correct r, s.
+		{v: 2, r: one, s: one, res: false},
+		{v: 3, r: one, s: one, res: false},
+		// incorrect v, incorrect/correct r, s.
+		{v: 2, r: zero, s: zero, res: false},
+		{v: 2, r: zero, s: one, res: false},
+		{v: 2, r: one, s: zero, res: false},
+		{v: 2, r: one, s: one, res: false},
+		// correct v, incorrent r, s
+		{v: 0, r: zero, s: zero, res: false},
+		{v: 0, r: zero, s: one, res: false},
+		{v: 0, r: one, s: zero, res: false},
+		{v: 1, r: zero, s: zero, res: false},
+		{v: 1, r: zero, s: one, res: false},
+		{v: 1, r: one, s: zero, res: false},
+		// incorrect r, s max limit
+		{v: 0, r: limit, s: limit, res: false},
+		{v: 0, r: limit, s: limitMinus1, res: false},
+		{v: 0, r: limitMinus1, s: limit, res: false},
+		// correct v, r, s max limit
+		{v: 0, r: limitMinus1, s: limitMinus1, res: true},
 	}
-	minusOne := big.NewInt(-1)
-	one := common.Big1
-	zero := common.Big0
-	secp256k1nMinus1 := new(big.Int).Sub(secp256k1N, common.Big1)
 
-	// correct v,r,s
-	check(true, 0, one, one)
-	check(true, 1, one, one)
-	// incorrect v, correct r,s,
-	check(false, 2, one, one)
-	check(false, 3, one, one)
-
-	// incorrect v, combinations of incorrect/correct r,s at lower limit
-	check(false, 2, zero, zero)
-	check(false, 2, zero, one)
-	check(false, 2, one, zero)
-	check(false, 2, one, one)
-
-	// correct v for any combination of incorrect r,s
-	check(false, 0, zero, zero)
-	check(false, 0, zero, one)
-	check(false, 0, one, zero)
-
-	check(false, 1, zero, zero)
-	check(false, 1, zero, one)
-	check(false, 1, one, zero)
-
-	// correct sig with max r,s
-	check(true, 0, secp256k1nMinus1, secp256k1nMinus1)
-	// correct v, combinations of incorrect r,s at upper limit
-	check(false, 0, secp256k1N, secp256k1nMinus1)
-	check(false, 0, secp256k1nMinus1, secp256k1N)
-	check(false, 0, secp256k1N, secp256k1N)
-
-	// current callers ensures r,s cannot be negative, but let's test for that too
-	// as crypto package could be used stand-alone
-	check(false, 0, minusOne, one)
-	check(false, 0, one, minusOne)
-}
-
-func checkhash(t *testing.T, name string, f func([]byte) []byte, msg, exp []byte) {
-	sum := f(msg)
-	if !bytes.Equal(exp, sum) {
-		t.Fatalf("hash %s mismatch: want: %x have: %x", name, exp, sum)
+	for _, c := range cases {
+		found := ValidateSignatureValues(c.v, c.r, c.s)
+		assert.Equal(t, found, c.res)
 	}
 }
 
-func checkAddr(t *testing.T, addr0, addr1 common.Address) {
-	if addr0 != addr1 {
-		t.Fatalf("address mismatch: want: %x have: %x", addr0, addr1)
+func TestPrivateKeyRead(t *testing.T) {
+	// Write private keys to disk, check if read is ok
+	testTable := []struct {
+		name               string
+		privateKeyHex      string
+		checksummedAddress string
+		shouldFail         bool
+	}{
+		// Generated with Ganache
+		{
+			"Valid address #1",
+			"0c3d062cd3c642735af6a3c1492d761d39a668a67617a457113eaf50860e9e3f",
+			"0x81e83Dc147B81Db5771D998A2C265cc710BE43a5",
+			false,
+		},
+		{
+			"Valid address #2",
+			"71e6439122f6a44884132d54a978318d7218021a5d8f39fd24f440774d564d87",
+			"0xCe1f32314aD63F18123b822a23c214DabAA9F7Cf",
+			false,
+		},
+		{
+			"Valid address #3",
+			"c6435f6cb3a8f19111737b72944a0b4a7e52d8a6e95f1ebaa2881679f2087709",
+			"0x47B7DAc4361062Dfc43d0EA6A2a4C3d27bBcCbdb",
+			false,
+		},
+		{
+			"Invalid key",
+			"c6435f6cb3a8f19111737b72944a0b4a7e52d8a6e95f1ebaa2881679f",
+			"",
+			true,
+		},
+	}
+
+	for _, testCase := range testTable {
+		t.Run(testCase.name, func(t *testing.T) {
+			privateKey, err := BytesToPrivateKey([]byte(testCase.privateKeyHex))
+			if err != nil && !testCase.shouldFail {
+				t.Fatalf("Unable to parse private key, %v", err)
+			}
+
+			if !testCase.shouldFail {
+				address, err := GetAddressFromKey(privateKey)
+				if err != nil {
+					t.Fatalf("unable to extract key, %v", err)
+				}
+
+				assert.Equal(t, testCase.checksummedAddress, address.String())
+			} else {
+				assert.Nil(t, privateKey)
+			}
+		})
 	}
 }
 
-// test to help Python team with integration of libsecp256k1
-// skip but keep it after they are done
-func TestPythonIntegration(t *testing.T) {
-	kh := "289c2857d4598e37fb9647507e47a309d6133539bf21a8b9cb6df88fd5232032"
-	k0, _ := HexToECDSA(kh)
+func TestPrivateKeyGeneration(t *testing.T) {
+	tempFile := "./privateKeyTesting-" + strconv.FormatInt(time.Now().Unix(), 10) + ".key"
 
-	msg0 := Keccak256([]byte("foo"))
-	sig0, _ := Sign(msg0, k0)
+	t.Cleanup(func() {
+		_ = os.Remove(tempFile)
+	})
 
-	msg1 := common.FromHex("00000000000000000000000000000000")
-	sig1, _ := Sign(msg0, k0)
+	// Generate the private key and write it to a file
+	writtenKey, err := GenerateOrReadPrivateKey(tempFile)
+	if err != nil {
+		t.Fatalf("Unable to generate private key, %v", err)
+	}
 
-	t.Logf("msg: %x, privkey: %s sig: %x\n", msg0, kh, sig0)
-	t.Logf("msg: %x, privkey: %s sig: %x\n", msg1, kh, sig1)
+	writtenAddress, err := GetAddressFromKey(writtenKey)
+	if err != nil {
+		t.Fatalf("unable to extract key, %v", err)
+	}
+
+	// Read existing key and check if it matches
+	readKey, err := GenerateOrReadPrivateKey(tempFile)
+	if err != nil {
+		t.Fatalf("Unable to read private key, %v", err)
+	}
+
+	readAddress, err := GetAddressFromKey(readKey)
+	if err != nil {
+		t.Fatalf("unable to extract key, %v", err)
+	}
+
+	assert.True(t, writtenKey.Equal(readKey))
+	assert.Equal(t, writtenAddress.String(), readAddress.String())
 }
