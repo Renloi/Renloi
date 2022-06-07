@@ -68,9 +68,9 @@ archives:
 
 #nfpms:
 #  - vendor: 0xRenloi
-#    homepage: https://Renloi.technology
-#    maintainer: Renloi Team <edge@Renloi.technology>
-#    description:  A Framework for Building Ethereum-compatible Blockchain Networks
+#    homepage: https://Renloi.org
+#    maintainer: Renloi Team <developers@Renloi.org>
+#    description:  A Proof of Stake Blockchain Network
 #    license: GPLv3 LGPLv3
 #
 #    formats:
