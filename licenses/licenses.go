@@ -14,7 +14,6 @@ type DepLicense struct {
 }
 
 var (
-	// Polygon Edge License
 	License string
 
 	// Dependency Licenses
