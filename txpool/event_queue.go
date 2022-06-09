@@ -1,7 +1,7 @@
 package txpool
 
 import (
-	"github.com/renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/txpool/proto"
 	"sync"
 )
 

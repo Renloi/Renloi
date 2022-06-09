@@ -4,34 +4,35 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/renloi/Renloi/archive"
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/consensus"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/helper/keccak"
-	"github.com/renloi/Renloi/helper/progress"
-	"github.com/renloi/Renloi/jsonrpc"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/server/proto"
-	"github.com/renloi/Renloi/state"
-	itrie "github.com/renloi/Renloi/state/immutable-trie"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/state/runtime/evm"
-	"github.com/renloi/Renloi/state/runtime/precompiled"
-	"github.com/renloi/Renloi/txpool"
-	"github.com/renloi/Renloi/types"
-	"github.com/hashicorp/go-hclog"
-	"github.com/prometheus/client_golang/prometheus"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"google.golang.org/grpc"
 	"math/big"
 	"net"
 	"net/http"
 	"os"
 	"path/filepath"
+
+	"github.com/Renloi/Renloi/archive"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/consensus"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/helper/progress"
+	"github.com/Renloi/Renloi/jsonrpc"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/server/proto"
+	"github.com/Renloi/Renloi/state"
+	itrie "github.com/Renloi/Renloi/state/immutable-trie"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/state/runtime/evm"
+	"github.com/Renloi/Renloi/state/runtime/precompiled"
+	"github.com/Renloi/Renloi/txpool"
+	"github.com/Renloi/Renloi/types"
+	"github.com/hashicorp/go-hclog"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"google.golang.org/grpc"
 )
 
 // Minimal is the central manager of the blockchain client
@@ -75,16 +76,54 @@ type Server struct {
 
 var dirPaths = []string{
 	"blockchain",
-	"keystore",
 	"trie",
+}
+
+// newFileLogger returns logger instance that writes all logs to a specified file.
+// If log file can't be created, it returns an error
+func newFileLogger(config *Config) (hclog.Logger, error) {
+	logFileWriter, err := os.Create(config.LogFilePath)
+	if err != nil {
+		return nil, fmt.Errorf("could not create log file, %w", err)
+	}
+
+	return hclog.New(&hclog.LoggerOptions{
+		Name:   "Renloi",
+		Level:  config.LogLevel,
+		Output: logFileWriter,
+	}), nil
+}
+
+// newCLILogger returns minimal logger instance that sends all logs to standard output
+func newCLILogger(config *Config) hclog.Logger {
+	return hclog.New(&hclog.LoggerOptions{
+		Name:  "Renloi",
+		Level: config.LogLevel,
+	})
+}
+
+// newLoggerFromConfig creates a new logger which logs to a specified file.
+// If log file is not set it outputs to standard output ( console ).
+// If log file is specified, and it can't be created the server command will error out
+func newLoggerFromConfig(config *Config) (hclog.Logger, error) {
+	if config.LogFilePath != "" {
+		fileLoggerInstance, err := newFileLogger(config)
+		if err != nil {
+			return nil, err
+		}
+
+		return fileLoggerInstance, nil
+	}
+
+	return newCLILogger(config), nil
 }
 
 // NewServer creates a new Minimal server, using the passed in configuration
 func NewServer(config *Config) (*Server, error) {
-	logger := hclog.New(&hclog.LoggerOptions{
-		Name:  "Renloi",
-		Level: config.LogLevel,
-	})
+	logger, err := newLoggerFromConfig(config)
+	if err != nil {
+		return nil, fmt.Errorf("could not setup new logger instance, %w", err)
+	}
 
 	m := &Server{
 		logger:             logger,
@@ -591,22 +630,6 @@ type Entry struct {
 	Config  map[string]interface{}
 }
 
-// SetupDataDir sets up the Renloi data directory and sub-folders
-func SetupDataDir(dataDir string, paths []string) error {
-	if err := createDir(dataDir); err != nil {
-		return fmt.Errorf("failed to create data dir: (%s): %w", dataDir, err)
-	}
-
-	for _, path := range paths {
-		path := filepath.Join(dataDir, path)
-		if err := createDir(path); err != nil {
-			return fmt.Errorf("failed to create path: (%s): %w", path, err)
-		}
-	}
-
-	return nil
-}
-
 func (s *Server) startPrometheusServer(listenAddr *net.TCPAddr) *http.Server {
 	srv := &http.Server{
 		Addr: listenAddr.String(),
@@ -627,20 +650,4 @@ func (s *Server) startPrometheusServer(listenAddr *net.TCPAddr) *http.Server {
 	}()
 
 	return srv
-}
-
-// createDir creates a file system directory if it doesn't exist
-func createDir(path string) error {
-	_, err := os.Stat(path)
-	if err != nil && !os.IsNotExist(err) {
-		return err
-	}
-
-	if os.IsNotExist(err) {
-		if err := os.MkdirAll(path, os.ModePerm); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }

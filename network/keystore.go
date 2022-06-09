@@ -3,7 +3,7 @@ package network
 import (
 	"encoding/hex"
 
-	"github.com/renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/secrets"
 	"github.com/libp2p/go-libp2p-core/crypto"
 )
 

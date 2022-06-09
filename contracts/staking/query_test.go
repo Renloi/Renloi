@@ -5,9 +5,9 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/renloi/Renloi/contracts/abis"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/contracts/abis"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
 	"github.com/stretchr/testify/assert"
 )
 

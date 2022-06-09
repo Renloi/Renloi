@@ -3,8 +3,8 @@ package list
 import (
 	"bytes"
 	"fmt"
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/server/proto"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/server/proto"
 )
 
 type PeersListResult struct {

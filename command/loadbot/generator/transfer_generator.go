@@ -5,8 +5,8 @@ import (
 	"math/big"
 	"sync/atomic"
 
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/types"
 )
 
 type TransferGenerator struct {

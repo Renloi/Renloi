@@ -1,14 +1,15 @@
 package server
 
 import (
-	"github.com/renloi/Renloi/consensus"
-	consensusDev "github.com/renloi/Renloi/consensus/dev"
-	consensusDummy "github.com/renloi/Renloi/consensus/dummy"
-	consensusIBFT "github.com/renloi/Renloi/consensus/ibft"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/secrets/awsssm"
-	"github.com/renloi/Renloi/secrets/hashicorpvault"
-	"github.com/renloi/Renloi/secrets/local"
+	"github.com/Renloi/Renloi/consensus"
+	consensusDev "github.com/Renloi/Renloi/consensus/dev"
+	consensusDummy "github.com/Renloi/Renloi/consensus/dummy"
+	consensusIBFT "github.com/Renloi/Renloi/consensus/ibft"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/secrets/awsssm"
+	"github.com/Renloi/Renloi/secrets/gcpssm"
+	"github.com/Renloi/Renloi/secrets/hashicorpvault"
+	"github.com/Renloi/Renloi/secrets/local"
 )
 
 type ConsensusType string
@@ -31,6 +32,7 @@ var secretsManagerBackends = map[secrets.SecretsManagerType]secrets.SecretsManag
 	secrets.Local:          local.SecretsManagerFactory,
 	secrets.HashicorpVault: hashicorpvault.SecretsManagerFactory,
 	secrets.AWSSSM:         awsssm.SecretsManagerFactory,
+	secrets.GCPSSM:         gcpssm.SecretsManagerFactory,
 }
 
 func ConsensusSupported(value string) bool {

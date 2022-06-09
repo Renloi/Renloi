@@ -3,8 +3,8 @@ package protocol
 import (
 	"math/big"
 
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/types"
 )
 
 // Blockchain is the interface required by the syncer to connect to the blockchain
@@ -19,7 +19,7 @@ type blockchainShim interface {
 	GetHeaderByHash(types.Hash) (*types.Header, bool)
 	GetHeaderByNumber(n uint64) (*types.Header, bool)
 
-	// advance chain methods
 	WriteBlock(block *types.Block) error
+	VerifyFinalizedBlock(block *types.Block) error
 	CalculateGasLimit(number uint64) (uint64, error)
 }

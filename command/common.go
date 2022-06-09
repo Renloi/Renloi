@@ -2,7 +2,7 @@ package command
 
 import (
 	"errors"
-	"github.com/renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/helper/common"
 )
 
 const (

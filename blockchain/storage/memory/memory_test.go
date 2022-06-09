@@ -3,7 +3,7 @@ package memory
 import (
 	"testing"
 
-	"github.com/renloi/Renloi/blockchain/storage"
+	"github.com/Renloi/Renloi/blockchain/storage"
 )
 
 func TestStorage(t *testing.T) {

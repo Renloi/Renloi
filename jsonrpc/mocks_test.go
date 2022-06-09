@@ -2,9 +2,9 @@ package jsonrpc
 
 import (
 	"errors"
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/types"
 	"math/big"
 	"sync"
 )
@@ -112,6 +112,10 @@ func (m *mockStore) GetReceiptsByHash(hash types.Hash) ([]*types.Receipt, error)
 
 func (m *mockStore) SubscribeEvents() blockchain.Subscription {
 	return m.subscription
+}
+
+func (m *mockStore) GetBlockByHash(hash types.Hash, full bool) (*types.Block, bool) {
+	return nil, false
 }
 
 func (m *mockStore) GetBlockByNumber(num uint64, full bool) (*types.Block, bool) {

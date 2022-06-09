@@ -5,10 +5,10 @@ import (
 	"os"
 	"strings"
 
-	"github.com/renloi/Renloi/crypto"
-	txpoolOp "github.com/renloi/Renloi/txpool/proto"
-	"github.com/renloi/Renloi/types"
-	"github.com/umbracle/go-web3/jsonrpc"
+	"github.com/Renloi/Renloi/crypto"
+	txpoolOp "github.com/Renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/types"
+	"github.com/umbracle/ethgo/jsonrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )

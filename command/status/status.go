@@ -2,12 +2,12 @@ package status
 
 import (
 	"context"
-	"github.com/renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command"
 	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/spf13/cobra"
 
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/server/proto"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/server/proto"
 )
 
 func GetCommand() *cobra.Command {

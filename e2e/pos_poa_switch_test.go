@@ -7,11 +7,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/renloi/Renloi/consensus/ibft"
-	ibftOp "github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/e2e/framework"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/consensus/ibft"
+	ibftOp "github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/e2e/framework"
+	"github.com/Renloi/Renloi/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -98,7 +98,7 @@ func TestPoAPoSSwitch(t *testing.T) {
 		go func(srv *framework.TestServer) {
 			defer wg.Done()
 
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), framework.DefaultTimeout)
 			defer cancel()
 
 			// every validator should have 4 validators in validator set
@@ -157,7 +157,7 @@ func TestPoAPoSSwitch(t *testing.T) {
 		go func(srv *framework.TestServer) {
 			defer wg.Done()
 
-			ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+			ctx, cancel := context.WithTimeout(context.Background(), framework.DefaultTimeout)
 			defer cancel()
 
 			// every validator should have only 3 validators in validator set

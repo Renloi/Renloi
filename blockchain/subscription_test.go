@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 func TestSubscriptionLinear(t *testing.T) {

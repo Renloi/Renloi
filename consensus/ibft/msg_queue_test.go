@@ -3,7 +3,7 @@ package ibft
 import (
 	"testing"
 
-	"github.com/renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
 	"github.com/stretchr/testify/assert"
 )
 

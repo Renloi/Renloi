@@ -8,8 +8,8 @@ import (
 	"path/filepath"
 	"sync"
 
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/secrets"
 	"github.com/hashicorp/go-hclog"
 )
 

@@ -4,7 +4,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 func TestExtraEncoding(t *testing.T) {

@@ -1,12 +1,11 @@
 package generate
 
 import (
-	"errors"
 	"fmt"
 	"strings"
 
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/secrets"
 )
 
 var (
@@ -24,13 +23,15 @@ const (
 )
 
 const (
-	defaultNodeName       = "Renloi-node"
+	defaultNodeName       = ""
 	defaultConfigFileName = "./secretsManagerConfig.json"
 	defaultNamespace      = "admin"
 )
 
 var (
-	errUnsupportedType = errors.New("unsupported service manager type")
+	errUnsupportedType = fmt.Errorf(
+		"unsupported service manager type; only %s, %s, %s and %s are supported for now",
+		secrets.Local, secrets.HashicorpVault, secrets.AWSSSM, secrets.GCPSSM)
 )
 
 type generateParams struct {

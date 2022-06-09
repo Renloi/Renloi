@@ -9,8 +9,8 @@ import (
 	"net/url"
 	"strconv"
 
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/hex"
 )
 
 const nodeIDBytes = 512 / 8

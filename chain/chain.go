@@ -7,8 +7,8 @@ import (
 	"io/ioutil"
 	"math/big"
 
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-multierror"
 )
 

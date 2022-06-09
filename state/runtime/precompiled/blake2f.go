@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"math/bits"
 
-	"github.com/renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/chain"
 )
 
 type blake2f struct {

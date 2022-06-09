@@ -14,6 +14,7 @@ type DepLicense struct {
 }
 
 var (
+	// Renloi License
 	License string
 
 	// Dependency Licenses

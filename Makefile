@@ -20,7 +20,7 @@ protoc:
 build:
 	$(eval LATEST_VERSION = $(shell git describe --tags --abbrev=0))
 	$(eval COMMIT_HASH = $(shell git rev-parse --short HEAD))
-	go build -ldflags="-X 'github.com/renloi/Renloi/versioning.Version=$(LATEST_VERSION)+$(COMMIT_HASH)'" main.go
+	go build -ldflags="-X 'github.com/Renloi/Renloi/versioning.Version=$(LATEST_VERSION)+$(COMMIT_HASH)'" main.go
 
 .PHONY: lint
 lint:
@@ -31,3 +31,9 @@ lint:
 .PHONY: generate-bsd-licenses
 generate-bsd-licenses:
 	./generate_dependency_licenses.sh BSD-3-Clause,BSD-2-Clause > ./licenses/bsd_licenses.json
+
+.PHONY: test
+test:
+	go build -o artifacts/Renloi .
+	$(eval export PATH=$(shell pwd)/artifacts:$(PATH))
+	go test -timeout 28m ./...

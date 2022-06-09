@@ -3,7 +3,7 @@ package generator
 import (
 	"sync"
 
-	"github.com/renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/crypto"
 )
 
 type BaseGenerator struct {

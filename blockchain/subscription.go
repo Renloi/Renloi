@@ -4,7 +4,7 @@ import (
 	"math/big"
 	"sync"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 type void struct{}

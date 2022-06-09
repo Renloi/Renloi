@@ -3,10 +3,10 @@ package ibft
 import (
 	"errors"
 	"fmt"
-	"github.com/renloi/Renloi/contracts/staking"
-	stakingHelper "github.com/renloi/Renloi/helper/staking"
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/contracts/staking"
+	stakingHelper "github.com/Renloi/Renloi/helper/staking"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/types"
 )
 
 // PoSMechanism defines specific hooks for the Proof of Stake IBFT mechanism

@@ -2,10 +2,10 @@ package genesis
 
 import (
 	"fmt"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/consensus/ibft"
-	"github.com/renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/consensus/ibft"
+	"github.com/Renloi/Renloi/helper/common"
 	"github.com/spf13/cobra"
 )
 

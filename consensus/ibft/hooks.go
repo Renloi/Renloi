@@ -3,7 +3,7 @@ package ibft
 import (
 	"fmt"
 
-	"github.com/renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/helper/common"
 )
 
 // Define the type of the IBFT consensus

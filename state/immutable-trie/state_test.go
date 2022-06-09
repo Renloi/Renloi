@@ -3,7 +3,7 @@ package itrie
 import (
 	"testing"
 
-	"github.com/renloi/Renloi/state"
+	"github.com/Renloi/Renloi/state"
 )
 
 func TestState(t *testing.T) {

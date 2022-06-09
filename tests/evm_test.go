@@ -10,15 +10,15 @@ import (
 	"github.com/hashicorp/go-hclog"
 	"github.com/umbracle/fastrlp"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/helper/keccak"
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/state/runtime/evm"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/state/runtime/evm"
+	"github.com/Renloi/Renloi/types"
 
-	"github.com/renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/crypto"
 )
 
 var mainnetChainConfig = chain.Params{
@@ -139,6 +139,8 @@ func rlpHashLogs(logs []*types.Log) (res types.Hash) {
 }
 
 func TestEVM(t *testing.T) {
+	t.Parallel()
+
 	folders, err := listFolders(vmTests)
 	if err != nil {
 		t.Fatal(err)
@@ -157,7 +159,10 @@ func TestEVM(t *testing.T) {
 		}
 
 		for _, file := range files {
+			file := file
 			t.Run(file, func(t *testing.T) {
+				t.Parallel()
+
 				if !strings.HasSuffix(file, ".json") {
 					return
 				}

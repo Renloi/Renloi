@@ -5,9 +5,9 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/secrets"
 )
 
 const DefaultGRPCPort int = 9632
@@ -36,6 +36,8 @@ type Config struct {
 	SecretsManager *secrets.SecretsManagerConfig
 
 	LogLevel hclog.Level
+
+	LogFilePath string
 }
 
 // Telemetry holds the config details for metric services

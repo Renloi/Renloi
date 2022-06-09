@@ -1,12 +1,14 @@
 package jsonrpc
 
 import (
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestBlockNumberOrHash_UnmarshalJSON(t *testing.T) {
+	t.Parallel()
+
 	var blockHash types.Hash
 	err := blockHash.UnmarshalText([]byte("0xe0ee62fd4a39a6988e24df0b406b90af71932e1b01d5561400a8eab943a33d68"))
 	assert.NoError(t, err)
@@ -82,7 +84,10 @@ func TestBlockNumberOrHash_UnmarshalJSON(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			bnh := BlockNumberOrHash{}
 			err := bnh.UnmarshalJSON([]byte(tt.rawRequest))
 

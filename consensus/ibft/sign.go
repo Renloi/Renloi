@@ -4,11 +4,11 @@ import (
 	"crypto/ecdsa"
 	"fmt"
 
-	"github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/helper/keccak"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/types"
 	"github.com/umbracle/fastrlp"
 )
 
@@ -165,8 +165,12 @@ func verifySigner(snap *Snapshot, header *types.Header) error {
 	return nil
 }
 
-// verifyCommitedFields is checking for consensus proof in the header
-func verifyCommitedFields(snap *Snapshot, header *types.Header) error {
+// verifyCommittedFields is checking for consensus proof in the header
+func verifyCommittedFields(
+	snap *Snapshot,
+	header *types.Header,
+	quorumSizeFn QuorumImplementation,
+) error {
 	extra, err := getIbftExtra(header)
 	if err != nil {
 		return err
@@ -207,7 +211,7 @@ func verifyCommitedFields(snap *Snapshot, header *types.Header) error {
 	// Valid committed seals must be at least 2F+1
 	// 	2F 	is the required number of honest validators who provided the committed seals
 	// 	+1	is the proposer
-	if validSeals := len(visited); validSeals < snap.Set.QuorumSize() {
+	if validSeals := len(visited); validSeals < quorumSizeFn(snap.Set) {
 		return fmt.Errorf("not enough seals to seal block")
 	}
 

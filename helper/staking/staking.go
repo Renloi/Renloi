@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/helper/common"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/helper/keccak"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/types"
 )
 
 var (
@@ -47,7 +47,7 @@ func getIndexWithOffset(keccakHash []byte, offset int64) []byte {
 // of the storage slots which need to be modified during bootstrap.
 //
 // It is SC dependant, and based on the SC located at:
-// https://github.com/renloi/staking-contracts/
+// https://github.com/Renloi/staking-contracts/
 func getStorageIndexes(address types.Address, index int64) *StorageIndexes {
 	storageIndexes := StorageIndexes{}
 
@@ -118,7 +118,7 @@ func PredeployStakingSC(
 	params PredeployParams,
 ) (*chain.GenesisAccount, error) {
 	// Set the code for the staking smart contract
-	// Code retrieved from https://github.com/renloi/staking-contracts
+	// Code retrieved from https://github.com/Renloi/staking-contracts
 	scHex, _ := hex.DecodeHex(StakingSCBytecode)
 	stakingAccount := &chain.GenesisAccount{
 		Code: scHex,

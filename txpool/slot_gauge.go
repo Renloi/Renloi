@@ -3,7 +3,7 @@ package txpool
 import (
 	"sync/atomic"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 // Gauge for measuring pool capacity in slots

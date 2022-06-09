@@ -1,8 +1,8 @@
 package snapshot
 
 import (
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/helper"
 	"github.com/spf13/cobra"
 )
 

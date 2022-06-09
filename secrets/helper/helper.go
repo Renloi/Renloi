@@ -3,16 +3,18 @@ package helper
 import (
 	"crypto/ecdsa"
 	"fmt"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/secrets/awsssm"
-	"github.com/renloi/Renloi/secrets/hashicorpvault"
-	"github.com/renloi/Renloi/secrets/local"
+	"path/filepath"
+
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/secrets/awsssm"
+	"github.com/Renloi/Renloi/secrets/gcpssm"
+	"github.com/Renloi/Renloi/secrets/hashicorpvault"
+	"github.com/Renloi/Renloi/secrets/local"
 	"github.com/hashicorp/go-hclog"
 	libp2pCrypto "github.com/libp2p/go-libp2p-core/crypto"
-	"path/filepath"
 )
 
 // SetupLocalSecretsManager is a helper method for boilerplate local secrets manager setup
@@ -58,6 +60,18 @@ func SetupAWSSSM(
 	secretsConfig *secrets.SecretsManagerConfig,
 ) (secrets.SecretsManager, error) {
 	return awsssm.SecretsManagerFactory(
+		secretsConfig,
+		&secrets.SecretsManagerParams{
+			Logger: hclog.NewNullLogger(),
+		},
+	)
+}
+
+// SetupGCPSSM is a helper method for boilerplate Google Cloud Computing secrets manager setup
+func SetupGCPSSM(
+	secretsConfig *secrets.SecretsManagerConfig,
+) (secrets.SecretsManager, error) {
+	return gcpssm.SecretsManagerFactory(
 		secretsConfig,
 		&secrets.SecretsManagerParams{
 			Logger: hclog.NewNullLogger(),

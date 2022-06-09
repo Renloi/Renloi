@@ -1,6 +1,6 @@
 package proto
 
-import "github.com/renloi/Renloi/types"
+import "github.com/Renloi/Renloi/types"
 
 // DecodeHashes decode to types Hash in the request
 func (h *HashRequest) DecodeHashes() ([]types.Hash, error) {

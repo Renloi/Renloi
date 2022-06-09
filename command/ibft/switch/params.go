@@ -3,12 +3,12 @@ package ibftswitch
 import (
 	"errors"
 	"fmt"
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/consensus/ibft"
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/consensus/ibft"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/types"
 	"os"
 )
 

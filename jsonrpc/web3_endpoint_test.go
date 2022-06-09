@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/renloi/Renloi/versioning"
+	"github.com/Renloi/Renloi/versioning"
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/stretchr/testify/assert"

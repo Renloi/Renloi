@@ -1,9 +1,9 @@
 package secrets
 
 import (
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/command/secrets/generate"
-	initCmd "github.com/renloi/Renloi/command/secrets/init"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/command/secrets/generate"
+	initCmd "github.com/Renloi/Renloi/command/secrets/init"
 	"github.com/spf13/cobra"
 )
 

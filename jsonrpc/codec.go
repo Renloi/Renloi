@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 // Request is a jsonrpc request

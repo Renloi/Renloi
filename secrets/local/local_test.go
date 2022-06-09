@@ -6,9 +6,9 @@ import (
 	"os"
 	"testing"
 
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/secrets"
 	"github.com/hashicorp/go-hclog"
 	libp2pCrypto "github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/stretchr/testify/assert"

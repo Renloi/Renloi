@@ -2,8 +2,8 @@ package main
 
 import (
 	_ "embed"
-	"github.com/renloi/Renloi/command/root"
-	"github.com/renloi/Renloi/licenses"
+	"github.com/Renloi/Renloi/command/root"
+	"github.com/Renloi/Renloi/licenses"
 )
 
 var (

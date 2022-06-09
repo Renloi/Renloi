@@ -3,9 +3,9 @@ package ibftswitch
 import (
 	"bytes"
 	"fmt"
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/consensus/ibft"
-	"github.com/renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/consensus/ibft"
+	"github.com/Renloi/Renloi/helper/common"
 )
 
 type IBFTSwitchResult struct {

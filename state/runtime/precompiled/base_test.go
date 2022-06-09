@@ -4,7 +4,7 @@ package precompiled
 import (
 	"testing"
 
-	"github.com/renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/hex"
 	"github.com/stretchr/testify/assert"
 )
 

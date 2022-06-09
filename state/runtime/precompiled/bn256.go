@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/chain"
 	bn256 "github.com/umbracle/go-eth-bn256"
 )
 

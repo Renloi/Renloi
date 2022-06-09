@@ -6,12 +6,12 @@ import (
 	"sync/atomic"
 	"time"
 
-	"github.com/renloi/Renloi/command/loadbot/generator"
-	"github.com/renloi/Renloi/helper/tests"
-	txpoolOp "github.com/renloi/Renloi/txpool/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/command/loadbot/generator"
+	"github.com/Renloi/Renloi/helper/tests"
+	txpoolOp "github.com/Renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/types"
 
-	"github.com/umbracle/go-web3/jsonrpc"
+	"github.com/umbracle/ethgo/jsonrpc"
 )
 
 func (l *Loadbot) deployContract(

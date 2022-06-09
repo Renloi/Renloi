@@ -1,6 +1,6 @@
 package subscribe
 
-import "github.com/renloi/Renloi/txpool/proto"
+import "github.com/Renloi/Renloi/txpool/proto"
 
 var (
 	params = &subscribeParams{}

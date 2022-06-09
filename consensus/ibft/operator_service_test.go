@@ -4,10 +4,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/consensus"
-	"github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/consensus"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/types"
 	"github.com/stretchr/testify/assert"
 )
 

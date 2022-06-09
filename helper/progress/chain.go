@@ -3,7 +3,7 @@ package progress
 import (
 	"sync"
 
-	"github.com/renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/blockchain"
 )
 
 type ChainSyncType string

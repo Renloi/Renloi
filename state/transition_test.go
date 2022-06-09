@@ -4,8 +4,8 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 	"github.com/stretchr/testify/assert"
 )
@@ -22,6 +22,8 @@ func newTestTransition(preState map[types.Address]*PreState) *Transition {
 }
 
 func TestSubGasLimitPrice(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name        string
 		preState    map[types.Address]*PreState
@@ -61,7 +63,10 @@ func TestSubGasLimitPrice(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			transition := newTestTransition(tt.preState)
 			msg := &types.Transaction{
 				From:     tt.from,
@@ -84,6 +89,8 @@ func TestSubGasLimitPrice(t *testing.T) {
 }
 
 func TestTransfer(t *testing.T) {
+	t.Parallel()
+
 	tests := []struct {
 		name        string
 		preState    map[types.Address]*PreState
@@ -127,7 +134,10 @@ func TestTransfer(t *testing.T) {
 	}
 
 	for _, tt := range tests {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			transition := newTestTransition(tt.preState)
 
 			amount := big.NewInt(tt.amount)

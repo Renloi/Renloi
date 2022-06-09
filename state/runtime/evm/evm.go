@@ -2,8 +2,8 @@ package evm
 
 import (
 	"errors"
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/state/runtime"
 )
 
 var _ runtime.Runtime = &EVM{}

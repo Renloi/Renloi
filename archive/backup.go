@@ -7,9 +7,9 @@ import (
 	"io"
 	"os"
 
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/server/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/server/proto"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"

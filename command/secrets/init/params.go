@@ -3,10 +3,10 @@ package init
 import (
 	"crypto/ecdsa"
 	"errors"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/secrets/helper"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/secrets/helper"
 	libp2pCrypto "github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/peer"
 )
@@ -93,6 +93,13 @@ func (ip *initParams) initFromConfig() error {
 		}
 
 		secretsManager = AWSSSM
+	case secrets.GCPSSM:
+		GCPSSM, err := helper.SetupGCPSSM(ip.secretsConfig)
+		if err != nil {
+			return err
+		}
+
+		secretsManager = GCPSSM
 	default:
 		return errUnsupportedType
 	}

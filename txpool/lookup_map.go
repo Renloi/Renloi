@@ -3,7 +3,7 @@ package txpool
 import (
 	"sync"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 // Lookup map used to find transactions present in the pool

@@ -3,8 +3,8 @@ package ibft
 import (
 	"testing"
 
-	"github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/types"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -59,7 +59,7 @@ func TestSign_CommittedSeals(t *testing.T) {
 
 		assert.NoError(t, err)
 
-		return verifyCommitedFields(snap, sealed)
+		return verifyCommittedFields(snap, sealed, OptimalQuorumSize)
 	}
 
 	// Correct

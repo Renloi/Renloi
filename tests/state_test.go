@@ -10,12 +10,12 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/state/runtime/evm"
-	"github.com/renloi/Renloi/state/runtime/precompiled"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/state/runtime/evm"
+	"github.com/Renloi/Renloi/state/runtime/precompiled"
+	"github.com/Renloi/Renloi/types"
 )
 
 var (
@@ -101,6 +101,8 @@ func RunSpecificTest(t *testing.T, file string, c stateCase, name, fork string, 
 }
 
 func TestState(t *testing.T) {
+	t.Parallel()
+
 	long := []string{
 		"static_Call50000",
 		"static_Return50000",
@@ -121,7 +123,10 @@ func TestState(t *testing.T) {
 	}
 
 	for _, folder := range folders {
+		folder := folder
 		t.Run(folder, func(t *testing.T) {
+			t.Parallel()
+
 			files, err := listFiles(folder)
 			if err != nil {
 				t.Fatal(err)

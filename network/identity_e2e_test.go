@@ -2,7 +2,7 @@ package network
 
 import (
 	"context"
-	"github.com/renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/chain"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"

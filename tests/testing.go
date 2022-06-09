@@ -10,13 +10,13 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/state"
-	itrie "github.com/renloi/Renloi/state/immutable-trie"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/state"
+	itrie "github.com/Renloi/Renloi/state/immutable-trie"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
 )
 
 // TESTS is the default location of the tests folder

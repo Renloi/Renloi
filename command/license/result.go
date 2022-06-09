@@ -3,7 +3,7 @@ package license
 import (
 	"bytes"
 	"fmt"
-	"github.com/renloi/Renloi/licenses"
+	"github.com/Renloi/Renloi/licenses"
 )
 
 type LicenseResult struct {

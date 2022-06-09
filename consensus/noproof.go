@@ -3,8 +3,8 @@ package consensus
 import (
 	"context"
 
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/types"
 )
 
 // NoProof is a consensus algorithm that validates everything

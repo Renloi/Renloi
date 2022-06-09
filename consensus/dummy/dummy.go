@@ -1,12 +1,12 @@
 package dummy
 
 import (
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/consensus"
-	"github.com/renloi/Renloi/helper/progress"
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/txpool"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/consensus"
+	"github.com/Renloi/Renloi/helper/progress"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/txpool"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 )
 
@@ -47,7 +47,7 @@ func (d *Dummy) Start() error {
 	return nil
 }
 
-func (d *Dummy) VerifyHeader(parent *types.Header, header *types.Header) error {
+func (d *Dummy) VerifyHeader(header *types.Header) error {
 	// All blocks are valid
 	return nil
 }

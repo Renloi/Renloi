@@ -2,7 +2,7 @@ package ibftswitch
 
 import (
 	"fmt"
-	"github.com/renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command"
 	"github.com/spf13/cobra"
 )
 

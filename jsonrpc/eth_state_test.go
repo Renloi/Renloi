@@ -7,11 +7,11 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
 	"github.com/stretchr/testify/assert"
 	"github.com/umbracle/fastrlp"
 )
@@ -619,6 +619,8 @@ func getExampleStore() *mockSpecialStore {
 // the latest block gas limit for the upper bound, or the specified
 // gas limit in the transaction
 func TestEth_EstimateGas_GasLimit(t *testing.T) {
+	// TODO Make this test run in parallel when the race
+	// condition is fixed in gas estimation
 	store := getExampleStore()
 	ethEndpoint := newTestEthEndpoint(store)
 

@@ -4,13 +4,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/helper/common"
 	"github.com/spf13/cobra"
 	"io"
 
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/server/proto"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/server/proto"
 	empty "google.golang.org/protobuf/types/known/emptypb"
 )
 

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/renloi/Renloi/e2e/framework"
+	"github.com/Renloi/Renloi/e2e/framework"
 )
 
 func TestClusterBlockSync(t *testing.T) {

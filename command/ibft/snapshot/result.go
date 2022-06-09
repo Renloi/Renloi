@@ -3,9 +3,9 @@ package snapshot
 import (
 	"bytes"
 	"fmt"
-	"github.com/renloi/Renloi/command/helper"
-	ibftHelper "github.com/renloi/Renloi/command/ibft/helper"
-	ibftOp "github.com/renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/command/helper"
+	ibftHelper "github.com/Renloi/Renloi/command/ibft/helper"
+	ibftOp "github.com/Renloi/Renloi/consensus/ibft/proto"
 )
 
 type IBFTSnapshotVote struct {

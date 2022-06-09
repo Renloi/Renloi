@@ -7,12 +7,12 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/consensus"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/consensus"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 	"github.com/stretchr/testify/assert"
 )

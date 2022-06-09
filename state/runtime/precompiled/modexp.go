@@ -5,7 +5,7 @@ import (
 
 	"math"
 
-	"github.com/renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/chain"
 )
 
 type modExp struct {

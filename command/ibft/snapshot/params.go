@@ -2,9 +2,9 @@ package snapshot
 
 import (
 	"context"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/helper"
-	ibftOp "github.com/renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/helper"
+	ibftOp "github.com/Renloi/Renloi/consensus/ibft/proto"
 )
 
 const (

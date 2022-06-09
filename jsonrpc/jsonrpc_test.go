@@ -1,7 +1,7 @@
 package jsonrpc
 
 import (
-	"github.com/renloi/Renloi/helper/tests"
+	"github.com/Renloi/Renloi/helper/tests"
 	"net"
 	"testing"
 

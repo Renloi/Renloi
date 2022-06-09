@@ -3,7 +3,7 @@ package generate
 import (
 	"bytes"
 	"fmt"
-	"github.com/renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/command/helper"
 )
 
 type SecretsGenerateResult struct {

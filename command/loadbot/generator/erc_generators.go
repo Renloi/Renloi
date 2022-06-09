@@ -4,7 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 
-	"github.com/renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/crypto"
 )
 
 // call ERC20 contract method and encode parameters

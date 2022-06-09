@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"errors"
 	"fmt"
+	"github.com/umbracle/ethgo"
 	"io"
 	"math/big"
 	"os"
@@ -18,26 +19,25 @@ import (
 	"testing"
 	"time"
 
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/genesis"
-	ibftSwitch "github.com/renloi/Renloi/command/ibft/switch"
-	initCmd "github.com/renloi/Renloi/command/secrets/init"
-	"github.com/renloi/Renloi/command/server"
-	"github.com/renloi/Renloi/consensus/ibft"
-	ibftOp "github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/crypto"
-	stakingHelper "github.com/renloi/Renloi/helper/staking"
-	"github.com/renloi/Renloi/helper/tests"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/secrets/local"
-	"github.com/renloi/Renloi/server/proto"
-	txpoolProto "github.com/renloi/Renloi/txpool/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/genesis"
+	ibftSwitch "github.com/Renloi/Renloi/command/ibft/switch"
+	initCmd "github.com/Renloi/Renloi/command/secrets/init"
+	"github.com/Renloi/Renloi/command/server"
+	"github.com/Renloi/Renloi/consensus/ibft"
+	ibftOp "github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/crypto"
+	stakingHelper "github.com/Renloi/Renloi/helper/staking"
+	"github.com/Renloi/Renloi/helper/tests"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/secrets/local"
+	"github.com/Renloi/Renloi/server/proto"
+	txpoolProto "github.com/Renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 	"github.com/libp2p/go-libp2p-core/peer"
-	"github.com/umbracle/go-web3"
-	"github.com/umbracle/go-web3/jsonrpc"
+	"github.com/umbracle/ethgo/jsonrpc"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 	empty "google.golang.org/protobuf/types/known/emptypb"
@@ -441,15 +441,15 @@ func (t *TestServer) DeployContract(
 	ctx context.Context,
 	binary string,
 	privateKey *ecdsa.PrivateKey,
-) (web3.Address, error) {
+) (ethgo.Address, error) {
 	buf, err := hex.DecodeString(binary)
 	if err != nil {
-		return web3.Address{}, err
+		return ethgo.Address{}, err
 	}
 
 	sender, err := crypto.GetAddressFromKey(privateKey)
 	if err != nil {
-		return web3.ZeroAddress, fmt.Errorf("unable to extract key, %w", err)
+		return ethgo.ZeroAddress, fmt.Errorf("unable to extract key, %w", err)
 	}
 
 	receipt, err := t.SendRawTx(ctx, &PreparedTransaction{
@@ -459,7 +459,7 @@ func (t *TestServer) DeployContract(
 		Input:    buf,
 	}, privateKey)
 	if err != nil {
-		return web3.Address{}, err
+		return ethgo.Address{}, err
 	}
 
 	return receipt.ContractAddress, nil
@@ -484,10 +484,10 @@ func (t *TestServer) SendRawTx(
 	ctx context.Context,
 	tx *PreparedTransaction,
 	signerKey *ecdsa.PrivateKey,
-) (*web3.Receipt, error) {
+) (*ethgo.Receipt, error) {
 	client := t.JSONRPC()
 
-	nextNonce, err := client.Eth().GetNonce(web3.Address(tx.From), web3.Latest)
+	nextNonce, err := client.Eth().GetNonce(ethgo.Address(tx.From), ethgo.Latest)
 	if err != nil {
 		return nil, err
 	}
@@ -513,11 +513,11 @@ func (t *TestServer) SendRawTx(
 	return tests.WaitForReceipt(ctx, t.JSONRPC().Eth(), txHash)
 }
 
-func (t *TestServer) WaitForReceipt(ctx context.Context, hash web3.Hash) (*web3.Receipt, error) {
+func (t *TestServer) WaitForReceipt(ctx context.Context, hash ethgo.Hash) (*ethgo.Receipt, error) {
 	client := t.JSONRPC()
 
 	type result struct {
-		receipt *web3.Receipt
+		receipt *ethgo.Receipt
 		err     error
 	}
 
@@ -546,7 +546,7 @@ func (t *TestServer) WaitForReceipt(ctx context.Context, hash web3.Hash) (*web3.
 
 // GetGasTotal waits for the total gas used sum for the passed in
 // transactions
-func (t *TestServer) GetGasTotal(txHashes []web3.Hash) uint64 {
+func (t *TestServer) GetGasTotal(txHashes []ethgo.Hash) uint64 {
 	t.t.Helper()
 
 	var (
@@ -566,10 +566,10 @@ func (t *TestServer) GetGasTotal(txHashes []web3.Hash) uint64 {
 	for _, txHash := range txHashes {
 		wg.Add(1)
 
-		go func(txHash web3.Hash) {
+		go func(txHash ethgo.Hash) {
 			defer wg.Done()
 
-			ctx, cancelFn := context.WithTimeout(context.Background(), 10*time.Second)
+			ctx, cancelFn := context.WithTimeout(context.Background(), DefaultTimeout)
 			defer cancelFn()
 
 			receipt, receiptErr := tests.WaitForReceipt(ctx, t.JSONRPC().Eth(), txHash)
@@ -613,7 +613,7 @@ func (t *TestServer) InvokeMethod(
 	contractAddress types.Address,
 	method string,
 	fromKey *ecdsa.PrivateKey,
-) *web3.Receipt {
+) *ethgo.Receipt {
 	sig := MethodSig(method)
 
 	fromAddress, err := crypto.GetAddressFromKey(fromKey)

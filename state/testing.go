@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 var addr1 = types.StringToAddress("1")
@@ -39,41 +39,66 @@ type buildPreState func(p PreStates) (State, Snapshot)
 // TestState tests a set of tests on a state
 func TestState(t *testing.T, buildPreState buildPreState) {
 	t.Helper()
+	t.Parallel()
 
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testWriteState(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testWriteEmptyState(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testUpdateStateWithEmpty(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testSuicideAccountInPreState(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testSuicideAccount(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testSuicideAccountWithData(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testSuicideCoinbase(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testSuicideWithIntermediateCommit(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testRestartRefunds(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testChangePrestateAccountBalanceToZero(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testChangeAccountBalanceToZero(t, buildPreState)
 	})
 	t.Run("", func(t *testing.T) {
+		t.Parallel()
+
 		testDeleteCommonStateRoot(t, buildPreState)
 	})
 }

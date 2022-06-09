@@ -10,10 +10,10 @@ import (
 	"fmt"
 	"math/big"
 
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/helper/keystore"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/keystore"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/types"
 	"github.com/btcsuite/btcd/btcec"
 	"golang.org/x/crypto/sha3"
 
@@ -30,6 +30,10 @@ var S256 = btcec.S256()
 var (
 	secp256k1N = hex.MustDecodeHex("0xfffffffffffffffffffffffffffffffebaaedce6af48a03bbfd25e8cd0364141")
 	one        = []byte{0x01}
+)
+
+var (
+	errInvalidSignature = errors.New("invalid signature")
 )
 
 func trimLeftZeros(b []byte) []byte {
@@ -140,6 +144,11 @@ func Ecrecover(hash, sig []byte) ([]byte, error) {
 func RecoverPubkey(signature, hash []byte) (*ecdsa.PublicKey, error) {
 	size := len(signature)
 	term := byte(27)
+
+	// Make sure the signature is present
+	if signature == nil || size < 1 {
+		return nil, errInvalidSignature
+	}
 
 	if signature[size-1] == 1 {
 		term = 28

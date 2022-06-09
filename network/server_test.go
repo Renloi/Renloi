@@ -3,14 +3,14 @@ package network
 import (
 	"context"
 	"fmt"
-	"github.com/renloi/Renloi/network/common"
-	peerEvent "github.com/renloi/Renloi/network/event"
+	"github.com/Renloi/Renloi/network/common"
+	peerEvent "github.com/Renloi/Renloi/network/event"
 	"net"
 	"strconv"
 	"testing"
 	"time"
 
-	"github.com/renloi/Renloi/helper/tests"
+	"github.com/Renloi/Renloi/helper/tests"
 
 	"github.com/libp2p/go-libp2p-core/crypto"
 	"github.com/libp2p/go-libp2p-core/network"

@@ -3,8 +3,8 @@ package init
 import (
 	"bytes"
 	"fmt"
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/types"
 )
 
 type SecretsInitResult struct {

@@ -2,10 +2,10 @@ package propose
 
 import (
 	"fmt"
-	"github.com/renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command"
 	"github.com/spf13/cobra"
 
-	"github.com/renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/command/helper"
 )
 
 func GetCommand() *cobra.Command {

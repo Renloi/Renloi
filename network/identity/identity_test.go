@@ -2,8 +2,8 @@ package identity
 
 import (
 	"context"
-	"github.com/renloi/Renloi/network/proto"
-	networkTesting "github.com/renloi/Renloi/network/testing"
+	"github.com/Renloi/Renloi/network/proto"
+	networkTesting "github.com/Renloi/Renloi/network/testing"
 	"github.com/hashicorp/go-hclog"
 	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/libp2p/go-libp2p-core/peer"

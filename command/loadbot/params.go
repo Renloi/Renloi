@@ -6,9 +6,9 @@ import (
 	"math/big"
 	"strings"
 
-	"github.com/renloi/Renloi/command/loadbot/generator"
-	"github.com/renloi/Renloi/types"
-	"github.com/umbracle/go-web3/abi"
+	"github.com/Renloi/Renloi/command/loadbot/generator"
+	"github.com/Renloi/Renloi/types"
+	"github.com/umbracle/ethgo/abi"
 )
 
 var (

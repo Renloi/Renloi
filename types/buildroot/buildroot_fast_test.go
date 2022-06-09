@@ -6,7 +6,7 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/helper/keccak"
 )
 
 func BenchmarkFast(b *testing.B) {

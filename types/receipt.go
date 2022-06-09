@@ -3,11 +3,12 @@ package types
 import (
 	"database/sql/driver"
 	"errors"
+	"fmt"
 
 	goHex "encoding/hex"
 
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/keccak"
 )
 
 type ReceiptStatus uint64
@@ -29,12 +30,16 @@ type Receipt struct {
 
 	// context fields
 	GasUsed         uint64
-	ContractAddress Address
+	ContractAddress *Address
 	TxHash          Hash
 }
 
 func (r *Receipt) SetStatus(s ReceiptStatus) {
 	r.Status = &s
+}
+
+func (r *Receipt) SetContractAddress(contractAddress Address) {
+	r.ContractAddress = &contractAddress
 }
 
 type Log struct {
@@ -70,7 +75,11 @@ func (b *Bloom) Scan(src interface{}) error {
 		return errors.New("invalid type assert")
 	}
 
-	bb := hex.MustDecodeHex(string(stringVal))
+	bb, decodeErr := hex.DecodeHex(string(stringVal))
+	if decodeErr != nil {
+		return fmt.Errorf("unable to decode value, %w", decodeErr)
+	}
+
 	copy(b[:], bb[:])
 
 	return nil

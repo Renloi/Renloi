@@ -5,9 +5,9 @@ import (
 	"math/big"
 	"path/filepath"
 
-	"github.com/renloi/Renloi/consensus/ibft"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/consensus/ibft"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/types"
 )
 
 type ConsensusType int

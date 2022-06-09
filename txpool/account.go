@@ -4,7 +4,7 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 // Thread safe map of all accounts registered by the pool.
@@ -150,6 +150,7 @@ type account struct {
 	init               sync.Once
 	enqueued, promoted *accountQueue
 	nextNonce          uint64
+	demotions          uint
 }
 
 // getNonce returns the next expected nonce for this account.

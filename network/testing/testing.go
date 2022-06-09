@@ -2,8 +2,8 @@ package testing
 
 import (
 	"context"
-	"github.com/renloi/Renloi/network/event"
-	"github.com/renloi/Renloi/network/proto"
+	"github.com/Renloi/Renloi/network/event"
+	"github.com/Renloi/Renloi/network/proto"
 	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/libp2p/go-libp2p-core/peer"
 	"google.golang.org/grpc"

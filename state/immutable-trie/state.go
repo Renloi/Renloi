@@ -6,8 +6,8 @@ import (
 
 	lru "github.com/hashicorp/golang-lru"
 
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/types"
 )
 
 type State struct {

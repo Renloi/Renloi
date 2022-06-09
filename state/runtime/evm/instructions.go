@@ -8,10 +8,10 @@ import (
 	"math/bits"
 	"sync"
 
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/keccak"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
 )
 
 type instruction func(c *state)

@@ -3,8 +3,8 @@ package itrie
 import (
 	"fmt"
 
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/umbracle/fastrlp"

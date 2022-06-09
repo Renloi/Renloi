@@ -3,8 +3,8 @@ package jsonrpc
 import (
 	"errors"
 	"fmt"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/umbracle/go-web3/abi"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/umbracle/ethgo/abi"
 )
 
 var (

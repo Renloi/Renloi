@@ -1,10 +1,10 @@
 package license
 
 import (
-	"github.com/renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command"
 	"github.com/spf13/cobra"
 
-	"github.com/renloi/Renloi/licenses"
+	"github.com/Renloi/Renloi/licenses"
 )
 
 func GetCommand() *cobra.Command {

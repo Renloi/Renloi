@@ -1,8 +1,8 @@
 package txpool
 
 import (
-	"github.com/renloi/Renloi/txpool/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 	"github.com/stretchr/testify/assert"
 	"sync"

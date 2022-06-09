@@ -2,9 +2,9 @@ package status
 
 import (
 	"context"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/helper"
-	ibftOp "github.com/renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/helper"
+	ibftOp "github.com/Renloi/Renloi/consensus/ibft/proto"
 	"github.com/spf13/cobra"
 	empty "google.golang.org/protobuf/types/known/emptypb"
 )

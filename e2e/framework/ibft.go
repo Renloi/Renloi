@@ -6,7 +6,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 type IBFTServersManager struct {

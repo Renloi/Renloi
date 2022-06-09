@@ -4,8 +4,8 @@ import (
 	"errors"
 	"math/big"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/types"
 )
 
 // TxContext is the context of the transaction

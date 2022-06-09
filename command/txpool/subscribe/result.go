@@ -3,8 +3,8 @@ package subscribe
 import (
 	"bytes"
 	"fmt"
-	"github.com/renloi/Renloi/command/helper"
-	txpoolProto "github.com/renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/command/helper"
+	txpoolProto "github.com/Renloi/Renloi/txpool/proto"
 )
 
 type TxPoolEventResult struct {

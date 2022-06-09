@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/secrets"
 	"github.com/hashicorp/go-hclog"
 	vault "github.com/hashicorp/vault/api"
 )

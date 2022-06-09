@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 	"google.golang.org/protobuf/proto"
 )
 

@@ -3,9 +3,9 @@ package jsonrpc
 import (
 	"fmt"
 
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/helper/keccak"
-	"github.com/renloi/Renloi/versioning"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/versioning"
 )
 
 // Web3 is the web3 jsonrpc endpoint

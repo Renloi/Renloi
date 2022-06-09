@@ -1,10 +1,10 @@
 package peers
 
 import (
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/command/peers/add"
-	"github.com/renloi/Renloi/command/peers/list"
-	"github.com/renloi/Renloi/command/peers/status"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/command/peers/add"
+	"github.com/Renloi/Renloi/command/peers/list"
+	"github.com/Renloi/Renloi/command/peers/status"
 	"github.com/spf13/cobra"
 )
 

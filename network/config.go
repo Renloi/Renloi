@@ -1,8 +1,8 @@
 package network
 
 import (
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/secrets"
 	"github.com/multiformats/go-multiaddr"
 	"net"
 )

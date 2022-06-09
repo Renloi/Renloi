@@ -4,8 +4,8 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/renloi/Renloi/txpool/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/types"
 	empty "google.golang.org/protobuf/types/known/emptypb"
 )
 

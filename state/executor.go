@@ -8,10 +8,10 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
 )
 
 const (
@@ -227,7 +227,7 @@ func (t *Transition) WriteFailedReceipt(txn *types.Transaction) error {
 	t.receipts = append(t.receipts, receipt)
 
 	if txn.To == nil {
-		receipt.ContractAddress = crypto.CreateAddress(txn.From, txn.Nonce)
+		receipt.ContractAddress = crypto.CreateAddress(txn.From, txn.Nonce).Ptr()
 	}
 
 	return nil
@@ -286,7 +286,7 @@ func (t *Transition) Write(txn *types.Transaction) error {
 
 	// if the transaction created a contract, store the creation address in the receipt.
 	if msg.To == nil {
-		receipt.ContractAddress = crypto.CreateAddress(msg.From, txn.Nonce)
+		receipt.ContractAddress = crypto.CreateAddress(msg.From, txn.Nonce).Ptr()
 	}
 
 	// Set the receipt logs and create a bloom for filtering

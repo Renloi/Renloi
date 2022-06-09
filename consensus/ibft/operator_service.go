@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/types"
 	empty "google.golang.org/protobuf/types/known/emptypb"
 )
 

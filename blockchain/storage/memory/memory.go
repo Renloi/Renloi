@@ -1,8 +1,8 @@
 package memory
 
 import (
-	"github.com/renloi/Renloi/blockchain/storage"
-	"github.com/renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/blockchain/storage"
+	"github.com/Renloi/Renloi/helper/hex"
 	"github.com/hashicorp/go-hclog"
 )
 

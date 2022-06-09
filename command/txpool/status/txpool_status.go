@@ -2,11 +2,11 @@ package status
 
 import (
 	"context"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/helper"
 	"github.com/spf13/cobra"
 
-	txpoolOp "github.com/renloi/Renloi/txpool/proto"
+	txpoolOp "github.com/Renloi/Renloi/txpool/proto"
 	empty "google.golang.org/protobuf/types/known/emptypb"
 )
 

@@ -3,10 +3,10 @@ package propose
 import (
 	"context"
 	"errors"
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/command/helper"
-	ibftOp "github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/command/helper"
+	ibftOp "github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/types"
 )
 
 const (

@@ -2,13 +2,15 @@ package server
 
 import (
 	"errors"
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/server"
+	"github.com/Renloi/Renloi/command/server/config"
+	"net"
+
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/server"
 	"github.com/hashicorp/go-hclog"
 	"github.com/multiformats/go-multiaddr"
-	"net"
 )
 
 const (
@@ -32,6 +34,7 @@ const (
 	devIntervalFlag       = "dev-interval"
 	devFlag               = "dev"
 	corsOriginFlag        = "access-control-allow-origins"
+	logFileLocationFlag   = "log-to"
 )
 
 const (
@@ -40,10 +43,10 @@ const (
 
 var (
 	params = &serverParams{
-		rawConfig: &Config{
-			Telemetry: &Telemetry{},
-			Network:   &Network{},
-			TxPool:    &TxPool{},
+		rawConfig: &config.Config{
+			Telemetry: &config.Telemetry{},
+			Network:   &config.Network{},
+			TxPool:    &config.TxPool{},
 		},
 	}
 )
@@ -54,7 +57,7 @@ var (
 )
 
 type serverParams struct {
-	rawConfig  *Config
+	rawConfig  *config.Config
 	configPath string
 
 	libp2pAddress     *net.TCPAddr
@@ -72,6 +75,8 @@ type serverParams struct {
 
 	genesisConfig *chain.Chain
 	secretsConfig *secrets.SecretsManagerConfig
+
+	logFileLocation string
 }
 
 func (p *serverParams) validateFlags() error {
@@ -106,6 +111,10 @@ func (p *serverParams) isNATAddressSet() bool {
 
 func (p *serverParams) isDNSAddressSet() bool {
 	return p.rawConfig.Network.DNSAddr != ""
+}
+
+func (p *serverParams) isLogFileLocationSet() bool {
+	return p.rawConfig.LogFilePath != ""
 }
 
 func (p *serverParams) isDevConsensus() bool {
@@ -159,5 +168,6 @@ func (p *serverParams) generateConfig() *server.Config {
 		RestoreFile:    p.getRestoreFilePath(),
 		BlockTime:      p.rawConfig.BlockTime,
 		LogLevel:       hclog.LevelFromString(p.rawConfig.LogLevel),
+		LogFilePath:    p.logFileLocation,
 	}
 }

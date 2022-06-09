@@ -4,23 +4,23 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"fmt"
-	ibftOp "github.com/renloi/Renloi/consensus/ibft/proto"
+	ibftOp "github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/umbracle/ethgo"
 	"math/big"
 	"strconv"
 	"testing"
 	"time"
 
-	"github.com/renloi/Renloi/contracts/staking"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/e2e/framework"
-	stakingHelper "github.com/renloi/Renloi/helper/staking"
-	"github.com/renloi/Renloi/helper/tests"
-	txpoolOp "github.com/renloi/Renloi/txpool/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/contracts/staking"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/e2e/framework"
+	stakingHelper "github.com/Renloi/Renloi/helper/staking"
+	"github.com/Renloi/Renloi/helper/tests"
+	txpoolOp "github.com/Renloi/Renloi/txpool/proto"
+	"github.com/Renloi/Renloi/types"
 	"github.com/golang/protobuf/ptypes/any"
 	"github.com/stretchr/testify/assert"
-	"github.com/umbracle/go-web3"
-	"github.com/umbracle/go-web3/jsonrpc"
+	"github.com/umbracle/ethgo/jsonrpc"
 )
 
 // foundInValidatorSet is a helper function for searching through the passed in set for a specific
@@ -376,7 +376,7 @@ func TestPoS_UnstakeExploit(t *testing.T) {
 		return signedTx
 	}
 
-	txHashes := make([]web3.Hash, 0)
+	txHashes := make([]ethgo.Hash, 0)
 
 	for i := 0; i < numTransactions; i++ {
 		var msg *txpoolOp.AddTxnReq
@@ -390,14 +390,14 @@ func TestPoS_UnstakeExploit(t *testing.T) {
 			From: types.ZeroAddress.String(),
 		}
 
-		addCtx, addCtxCn := context.WithTimeout(context.Background(), time.Second*10)
+		addCtx, addCtxCn := context.WithTimeout(context.Background(), framework.DefaultTimeout)
 
 		addResp, addErr := clt.AddTxn(addCtx, msg)
 		if addErr != nil {
 			t.Fatalf("Unable to add txn, %v", addErr)
 		}
 
-		txHashes = append(txHashes, web3.HexToHash(addResp.TxHash))
+		txHashes = append(txHashes, ethgo.HexToHash(addResp.TxHash))
 
 		addCtxCn()
 	}
@@ -521,7 +521,7 @@ func TestPoS_StakeUnstakeExploit(t *testing.T) {
 
 	oneEth := framework.EthToWei(1)
 	zeroEth := framework.EthToWei(0)
-	txHashes := make([]web3.Hash, 0)
+	txHashes := make([]ethgo.Hash, 0)
 
 	for i := 0; i < numTransactions; i++ {
 		var msg *txpoolOp.AddTxnReq
@@ -549,7 +549,7 @@ func TestPoS_StakeUnstakeExploit(t *testing.T) {
 			t.Fatalf("Unable to add txn, %v", addErr)
 		}
 
-		txHashes = append(txHashes, web3.HexToHash(addResp.TxHash))
+		txHashes = append(txHashes, ethgo.HexToHash(addResp.TxHash))
 	}
 
 	// Set up the blockchain listener to catch the added block event
@@ -652,7 +652,7 @@ func TestPoS_StakeUnstakeWithinSameBlock(t *testing.T) {
 	}
 
 	zeroEth := framework.EthToWei(0)
-	txHashes := make([]web3.Hash, 0)
+	txHashes := make([]ethgo.Hash, 0)
 
 	// addTxn is a helper method for generating and adding a transaction
 	// through the operator command
@@ -670,7 +670,7 @@ func TestPoS_StakeUnstakeWithinSameBlock(t *testing.T) {
 			t.Fatalf("Unable to add txn, %v", addErr)
 		}
 
-		txHashes = append(txHashes, web3.HexToHash(addResp.TxHash))
+		txHashes = append(txHashes, ethgo.HexToHash(addResp.TxHash))
 	}
 
 	// Stake transaction

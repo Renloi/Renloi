@@ -2,19 +2,19 @@ package root
 
 import (
 	"fmt"
-	"github.com/renloi/Renloi/command/backup"
-	"github.com/renloi/Renloi/command/genesis"
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/command/ibft"
-	"github.com/renloi/Renloi/command/license"
-	"github.com/renloi/Renloi/command/loadbot"
-	"github.com/renloi/Renloi/command/monitor"
-	"github.com/renloi/Renloi/command/peers"
-	"github.com/renloi/Renloi/command/secrets"
-	"github.com/renloi/Renloi/command/server"
-	"github.com/renloi/Renloi/command/status"
-	"github.com/renloi/Renloi/command/txpool"
-	"github.com/renloi/Renloi/command/version"
+	"github.com/Renloi/Renloi/command/backup"
+	"github.com/Renloi/Renloi/command/genesis"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/command/ibft"
+	"github.com/Renloi/Renloi/command/license"
+	"github.com/Renloi/Renloi/command/loadbot"
+	"github.com/Renloi/Renloi/command/monitor"
+	"github.com/Renloi/Renloi/command/peers"
+	"github.com/Renloi/Renloi/command/secrets"
+	"github.com/Renloi/Renloi/command/server"
+	"github.com/Renloi/Renloi/command/status"
+	"github.com/Renloi/Renloi/command/txpool"
+	"github.com/Renloi/Renloi/command/version"
 	"github.com/spf13/cobra"
 	"os"
 )
@@ -26,7 +26,7 @@ type RootCommand struct {
 func NewRootCommand() *RootCommand {
 	rootCommand := &RootCommand{
 		baseCmd: &cobra.Command{
-			Short: "Renloi is a Proof of Stake EVM-compatible blockchain network",
+			Short: "Renloi is an EVM-Comatatable Proof of Stake Blockchain Network.",
 		},
 	}
 

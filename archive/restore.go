@@ -7,10 +7,10 @@ import (
 	"math/big"
 	"os"
 
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/helper/common"
-	"github.com/renloi/Renloi/helper/progress"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/helper/common"
+	"github.com/Renloi/Renloi/helper/progress"
+	"github.com/Renloi/Renloi/types"
 )
 
 type blockchainInterface interface {
@@ -19,6 +19,7 @@ type blockchainInterface interface {
 	GetBlockByNumber(uint64, bool) (*types.Block, bool)
 	GetHashByNumber(uint64) types.Hash
 	WriteBlock(*types.Block) error
+	VerifyFinalizedBlock(*types.Block) error
 }
 
 // RestoreChain reads blocks from the archive and write to the chain
@@ -73,6 +74,10 @@ func importBlocks(chain blockchainInterface, blockStream *blockStream, progressi
 	nextBlock := firstBlock
 
 	for {
+		if err := chain.VerifyFinalizedBlock(nextBlock); err != nil {
+			return err
+		}
+
 		if err := chain.WriteBlock(nextBlock); err != nil {
 			return err
 		}

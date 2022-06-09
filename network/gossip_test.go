@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	testproto "github.com/renloi/Renloi/network/proto"
+	testproto "github.com/Renloi/Renloi/network/proto"
 	"testing"
 	"time"
 )

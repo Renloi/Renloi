@@ -8,8 +8,8 @@ import (
 	iradix "github.com/hashicorp/go-immutable-radix"
 	"github.com/umbracle/fastrlp"
 
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/types"
 )
 
 type State interface {
@@ -64,8 +64,8 @@ func (a *Account) UnmarshalRlp(b []byte) error {
 		return err
 	}
 
-	if len(elems) != 4 {
-		return fmt.Errorf("bad")
+	if len(elems) < 4 {
+		return fmt.Errorf("incorrect number of elements to decode account, expected 4 but found %d", len(elems))
 	}
 
 	// nonce

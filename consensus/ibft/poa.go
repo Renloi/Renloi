@@ -4,7 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types"
 )
 
 var (

@@ -2,7 +2,7 @@ package dial
 
 import (
 	"container/heap"
-	"github.com/renloi/Renloi/network/common"
+	"github.com/Renloi/Renloi/network/common"
 	"sync"
 
 	"github.com/libp2p/go-libp2p-core/peer"

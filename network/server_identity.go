@@ -1,11 +1,11 @@
 package network
 
 import (
-	"github.com/renloi/Renloi/network/common"
-	peerEvent "github.com/renloi/Renloi/network/event"
-	"github.com/renloi/Renloi/network/grpc"
-	"github.com/renloi/Renloi/network/identity"
-	"github.com/renloi/Renloi/network/proto"
+	"github.com/Renloi/Renloi/network/common"
+	peerEvent "github.com/Renloi/Renloi/network/event"
+	"github.com/Renloi/Renloi/network/grpc"
+	"github.com/Renloi/Renloi/network/identity"
+	"github.com/Renloi/Renloi/network/proto"
 	"github.com/libp2p/go-libp2p-core/network"
 	"github.com/libp2p/go-libp2p-core/peer"
 	rawGrpc "google.golang.org/grpc"

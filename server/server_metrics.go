@@ -1,9 +1,9 @@
 package server
 
 import (
-	"github.com/renloi/Renloi/consensus"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/txpool"
+	"github.com/Renloi/Renloi/consensus"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/txpool"
 )
 
 // serverMetrics holds the metric instances of all sub systems

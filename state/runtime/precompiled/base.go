@@ -5,9 +5,9 @@ import (
 	"golang.org/x/crypto/ripemd160" //nolint:staticcheck
 	"math/big"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/helper/keccak"
 )
 
 type ecrecover struct {

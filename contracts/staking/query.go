@@ -2,13 +2,13 @@ package staking
 
 import (
 	"errors"
+	"github.com/umbracle/ethgo"
 	"math/big"
 
-	"github.com/renloi/Renloi/contracts/abis"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
-	"github.com/umbracle/go-web3"
-	"github.com/umbracle/go-web3/abi"
+	"github.com/Renloi/Renloi/contracts/abis"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
+	"github.com/umbracle/ethgo/abi"
 )
 
 var (
@@ -30,10 +30,10 @@ func DecodeValidators(method *abi.Method, returnValue []byte) ([]types.Address, 
 		return nil, errors.New("failed type assertion from decodedResults to map")
 	}
 
-	web3Addresses, ok := results["0"].([]web3.Address)
+	web3Addresses, ok := results["0"].([]ethgo.Address)
 
 	if !ok {
-		return nil, errors.New("failed type assertion from results[0] to []web3.Address")
+		return nil, errors.New("failed type assertion from results[0] to []ethgo.Address")
 	}
 
 	addresses := make([]types.Address, len(web3Addresses))

@@ -1,23 +1,31 @@
 package server
 
 import (
+	"errors"
 	"fmt"
-	"github.com/renloi/Renloi/network/common"
+	"github.com/Renloi/Renloi/command/server/config"
 	"math"
 	"net"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/command/helper"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/server"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/network/common"
+
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/command/helper"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/server"
+	"github.com/Renloi/Renloi/types"
+)
+
+var (
+	errInvalidBlockTime       = errors.New("invalid block time specified")
+	errDataDirectoryUndefined = errors.New("data directory not defined")
 )
 
 func (p *serverParams) initConfigFromFile() error {
 	var parseErr error
 
-	if p.rawConfig, parseErr = readConfigFile(p.configPath); parseErr != nil {
+	if p.rawConfig, parseErr = config.ReadConfigFile(p.configPath); parseErr != nil {
 		return parseErr
 	}
 
@@ -37,13 +45,44 @@ func (p *serverParams) initRawParams() error {
 		return err
 	}
 
+	if err := p.initDataDirLocation(); err != nil {
+		return err
+	}
+
+	if err := p.initBlockTime(); err != nil {
+		return err
+	}
+
 	if p.isDevMode {
 		p.initDevMode()
 	}
 
 	p.initPeerLimits()
+	p.initLogFileLocation()
 
 	return p.initAddresses()
+}
+
+func (p *serverParams) initBlockTime() error {
+	if p.rawConfig.BlockTime < 1 {
+		return errInvalidBlockTime
+	}
+
+	return nil
+}
+
+func (p *serverParams) initDataDirLocation() error {
+	if p.rawConfig.DataDir == "" {
+		return errDataDirectoryUndefined
+	}
+
+	return nil
+}
+
+func (p *serverParams) initLogFileLocation() {
+	if p.isLogFileLocationSet() {
+		p.logFileLocation = p.rawConfig.LogFilePath
+	}
 }
 
 func (p *serverParams) initBlockGasTarget() error {

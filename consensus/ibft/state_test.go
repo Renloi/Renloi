@@ -4,7 +4,7 @@ import (
 	"strconv"
 	"testing"
 
-	"github.com/renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -62,7 +62,7 @@ func TestNumValid(t *testing.T) {
 
 		assert.Equal(t,
 			int(c.Quorum),
-			pool.ValidatorSet().QuorumSize(),
+			OptimalQuorumSize(pool.ValidatorSet()),
 		)
 	}
 }

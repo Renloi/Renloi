@@ -4,7 +4,7 @@ import (
 	"container/heap"
 	"sync"
 
-	"github.com/renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
 )
 
 // msgQueue defines the structure that holds message queues for different IBFT states

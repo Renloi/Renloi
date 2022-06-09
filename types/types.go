@@ -7,8 +7,8 @@ import (
 	"strings"
 	"unicode"
 
-	"github.com/renloi/Renloi/helper/hex"
-	"github.com/renloi/Renloi/helper/keccak"
+	"github.com/Renloi/Renloi/helper/hex"
+	"github.com/Renloi/Renloi/helper/keccak"
 )
 
 var ZeroAddress = Address{}
@@ -60,7 +60,11 @@ func (h *Hash) Scan(src interface{}) error {
 		return errors.New("invalid type assert")
 	}
 
-	hh := hex.MustDecodeHex(string(stringVal))
+	hh, decodeErr := hex.DecodeHex(string(stringVal))
+	if decodeErr != nil {
+		return fmt.Errorf("unable to decode value, %w", decodeErr)
+	}
+
 	copy(h[:], hh[:])
 
 	return nil
@@ -91,6 +95,10 @@ func (a Address) checksumEncode() string {
 	return "0x" + string(result)
 }
 
+func (a Address) Ptr() *Address {
+	return &a
+}
+
 func (a Address) String() string {
 	return a.checksumEncode()
 }
@@ -109,7 +117,11 @@ func (a *Address) Scan(src interface{}) error {
 		return errors.New("invalid type assert")
 	}
 
-	aa := hex.MustDecodeHex(string(stringVal))
+	aa, decodeErr := hex.DecodeHex(string(stringVal))
+	if decodeErr != nil {
+		return fmt.Errorf("unable to decode value, %w", decodeErr)
+	}
+
 	copy(a[:], aa[:])
 
 	return nil

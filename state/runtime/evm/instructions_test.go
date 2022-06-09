@@ -4,10 +4,10 @@ import (
 	"math/big"
 	"testing"
 
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/crypto"
-	"github.com/renloi/Renloi/state/runtime"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/crypto"
+	"github.com/Renloi/Renloi/state/runtime"
+	"github.com/Renloi/Renloi/types"
 	"github.com/stretchr/testify/assert"
 )
 

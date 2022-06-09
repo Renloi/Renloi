@@ -10,8 +10,8 @@ import (
 	"sync"
 	"sync/atomic"
 
-	"github.com/renloi/Renloi/consensus/ibft/proto"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/consensus/ibft/proto"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 )
 

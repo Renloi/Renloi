@@ -1,8 +1,8 @@
 package version
 
 import (
-	"github.com/renloi/Renloi/command"
-	"github.com/renloi/Renloi/versioning"
+	"github.com/Renloi/Renloi/command"
+	"github.com/Renloi/Renloi/versioning"
 	"github.com/spf13/cobra"
 )
 

@@ -5,7 +5,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/renloi/Renloi/blockchain/storage"
+	"github.com/Renloi/Renloi/blockchain/storage"
 	"github.com/hashicorp/go-hclog"
 )
 

@@ -4,14 +4,14 @@ import (
 	"context"
 	"log"
 
-	"github.com/renloi/Renloi/blockchain"
-	"github.com/renloi/Renloi/chain"
-	"github.com/renloi/Renloi/helper/progress"
-	"github.com/renloi/Renloi/network"
-	"github.com/renloi/Renloi/secrets"
-	"github.com/renloi/Renloi/state"
-	"github.com/renloi/Renloi/txpool"
-	"github.com/renloi/Renloi/types"
+	"github.com/Renloi/Renloi/blockchain"
+	"github.com/Renloi/Renloi/chain"
+	"github.com/Renloi/Renloi/helper/progress"
+	"github.com/Renloi/Renloi/network"
+	"github.com/Renloi/Renloi/secrets"
+	"github.com/Renloi/Renloi/state"
+	"github.com/Renloi/Renloi/txpool"
+	"github.com/Renloi/Renloi/types"
 	"github.com/hashicorp/go-hclog"
 	"google.golang.org/grpc"
 )
@@ -20,7 +20,7 @@ import (
 // Each consensus mechanism must implement this interface in order to be valid
 type Consensus interface {
 	// VerifyHeader verifies the header is correct
-	VerifyHeader(parent, header *types.Header) error
+	VerifyHeader(header *types.Header) error
 
 	// ProcessHeaders updates the snapshot based on the verified headers
 	ProcessHeaders(headers []*types.Header) error

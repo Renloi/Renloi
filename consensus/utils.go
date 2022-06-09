@@ -1,8 +1,8 @@
 package consensus
 
 import (
-	"github.com/renloi/Renloi/types"
-	"github.com/renloi/Renloi/types/buildroot"
+	"github.com/Renloi/Renloi/types"
+	"github.com/Renloi/Renloi/types/buildroot"
 )
 
 // BuildBlockParams are parameters passed into the BuildBlock helper method

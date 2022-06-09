@@ -7,8 +7,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/renloi/Renloi/e2e/framework"
-	"github.com/renloi/Renloi/server/proto"
+	"github.com/Renloi/Renloi/e2e/framework"
+	"github.com/Renloi/Renloi/server/proto"
 	empty "google.golang.org/protobuf/types/known/emptypb"
 )
 
