@@ -31,7 +31,7 @@ Build for your operating system:
 
 ## Renloi's community
 * Website https://renloi.org
-* Discord https://discord.gg/renloi
+* Discord https://discord.gg/GxSj86XtHz
 * Telegram https://t.me/renloi_org
 
 
